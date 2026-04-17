@@ -1,0 +1,50 @@
+Title: How to Request Software Installation
+Source URL: https://wiki.acme-financial.internal/display/IT/software-request
+Last Updated: 2026-01-22
+Document Type: how-to
+
+---
+
+# How to Request Software Installation
+
+ACME Financial maintains an approved software catalog. Only software on this list may be installed on company devices. Unapproved software must go through a formal request and security review.
+
+## Installing Approved Software
+
+Software on the approved catalog can be self-installed:
+
+- **Windows:** Open Software Center (Start menu → Software Center). Browse or search the catalog. Click the software name → Install. No approval required.
+- **macOS:** Open Self Service (Jamf) from your Applications folder. Browse or search. Click Install.
+
+If the software you need is in the catalog, installation completes without IT involvement. Software Center and Self Service only show software your role is licensed for.
+
+## Requesting Software Not in the Catalog
+
+If the software you need is not in Software Center or Self Service:
+
+1. Go to the IT Service Portal: https://itportal.acme-financial.internal
+2. Select "Software Requests" → "New Software Request".
+3. Fill in: software name, version, vendor, business justification, and whether the software handles regulated data (PII, financial data, trading data).
+4. Your manager approves the business case.
+5. The IT Security team conducts a security and compliance review (typically 3–5 business days).
+6. If approved, IT packages and deploys the software via Software Center/Self Service.
+
+Software that handles regulated data or connects to external networks requires an additional Data Privacy review, which can take up to 10 business days.
+
+## Personal Software on Company Devices
+
+Installing personal, unlicensed, or unapproved software on company devices is prohibited under the Acceptable Use Policy. This includes:
+- Personal games or entertainment apps
+- Peer-to-peer file sharing tools
+- Browser extensions not on the approved extensions list
+- Unlicensed copies of commercial software
+
+Violations may result in device wipe and disciplinary action. If you are unsure whether software is approved, submit a software request before installing.
+
+## Free/Open Source Software
+
+Free and open source software is not automatically approved. It must go through the same request process. Licensing and security reviews still apply. Note: some OSS tools have data-exfiltration features (telemetry, cloud sync) that are incompatible with our data handling policies.
+
+## Emergency Software Requests
+
+For urgent business needs (e.g., a time-sensitive client deliverable), contact the IT Helpdesk directly (ext. 4357) and explain the urgency. Expedited reviews can be completed within 24 hours with senior manager sign-off.

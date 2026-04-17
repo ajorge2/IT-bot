@@ -1,0 +1,60 @@
+Title: Enrolling a New Device in Microsoft Intune (MDM)
+Source URL: https://wiki.acme-financial.internal/display/IT/mdm-enrollment
+Last Updated: 2026-02-05
+Document Type: how-to
+
+---
+
+# Enrolling a New Device in Microsoft Intune (MDM)
+
+All company-issued devices must be enrolled in Microsoft Intune (our Mobile Device Management platform) before they can access corporate resources such as email, SharePoint, or internal applications.
+
+## Windows Laptop Enrollment
+
+New laptops provisioned by IT are enrolled automatically during setup via Autopilot. If your device is not enrolled:
+
+1. Open Settings → Accounts → Access work or school.
+2. Click "Connect" → enter your corporate email (firstname.lastname@acme-financial.com).
+3. On the sign-in screen, enter your AD credentials.
+4. Select "Join this device to Azure Active Directory" when prompted.
+5. Restart the device. Intune policies will apply during the restart.
+
+Enrollment may take 10–15 minutes. The Company Portal app will appear in the Start menu when enrollment is complete.
+
+## macOS Enrollment
+
+1. Download the Company Portal app from the Mac App Store or from https://itportal.acme-financial.internal/downloads.
+2. Open Company Portal → Sign in with your corporate email.
+3. Follow the guided enrollment steps. You will be prompted to install a management profile.
+4. Go to System Preferences → Profiles → click the Intune profile → Install.
+5. Enter your macOS admin password when prompted (contact the helpdesk if you do not have local admin rights).
+6. Enrollment completes in 5–10 minutes.
+
+## iPhone / iPad Enrollment
+
+1. Open Settings → General → VPN & Device Management.
+2. If a company profile is already listed, it was enrolled by IT. No action needed.
+3. For a new device: download the Microsoft Intune Company Portal from the App Store.
+4. Sign in with your corporate email and complete the enrollment wizard.
+5. You will be prompted to install a management profile — this is required and is limited to corporate policy enforcement; IT cannot access personal data, photos, or apps.
+
+## Android Enrollment
+
+1. Download Microsoft Intune Company Portal from Google Play.
+2. Open the app → Sign in with corporate email.
+3. Follow the enrollment steps. Allow the required device permissions when prompted.
+4. For Samsung Knox devices, additional MDM features are enabled automatically.
+
+## What MDM Manages on Your Device
+
+Intune manages corporate data only. It can:
+- Enforce screen lock PIN/password requirements
+- Require device encryption
+- Push approved apps via Software Center/Self Service
+- Remotely wipe corporate data if the device is lost or stolen (does NOT wipe personal data on BYOD)
+
+IT cannot access personal files, photos, browser history, or messages through Intune.
+
+## Unenrolling / Device Retirement
+
+If you are leaving the company or replacing your device, contact the IT Helpdesk before doing anything. They will remote-wipe corporate data and unenroll the device properly. Do not factory reset a company-issued device without contacting IT first.

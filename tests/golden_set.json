@@ -1,0 +1,104 @@
+[
+  {
+    "question": "How do I reset my Active Directory password without calling the helpdesk?",
+    "ground_truth": "Use the Self-Service Password Reset (SSPR) portal at https://sspr.acme-financial.internal. Enter your corporate email, verify your identity using Microsoft Authenticator, backup email, or SMS, then set a new password. The change takes effect within 60 seconds.",
+    "ground_truth_context": ["Self-Service Password Reset (Recommended)", "SSPR portal"]
+  },
+  {
+    "question": "My account is locked after too many failed login attempts. What do I do?",
+    "ground_truth": "Accounts lock after 5 failed login attempts. Use the SSPR portal at https://sspr.acme-financial.internal or contact the IT Helpdesk at ext. 4357. Do not keep trying — each failed attempt resets the 30-minute lockout timer.",
+    "ground_truth_context": ["Your account is locked", "5 failed login attempts"]
+  },
+  {
+    "question": "How do I connect to the VPN from home?",
+    "ground_truth": "Click the GlobalProtect globe icon in the system tray, enter gateway vpn.acme-financial.com, enter your corporate credentials, complete the MFA prompt in Microsoft Authenticator, then click Connect. A green icon indicates a successful connection.",
+    "ground_truth_context": ["Connecting to the VPN", "GlobalProtect"]
+  },
+  {
+    "question": "My VPN stopped working after I changed my password. How do I fix it?",
+    "ground_truth": "GlobalProtect caches credentials and does not pick up password changes automatically. Click the globe icon → Disconnect, click the gear icon → Settings → Clear Credentials, then reconnect and enter your new AD password when prompted.",
+    "ground_truth_context": ["VPN Not Connecting After a Password Change", "Clear Credentials"]
+  },
+  {
+    "question": "How do I set up Microsoft Authenticator for MFA?",
+    "ground_truth": "Download Microsoft Authenticator from the App Store or Google Play. On your work computer go to https://aka.ms/mfasetup, click Add sign-in method → Authenticator app, then scan the QR code shown with the Authenticator app on your phone. Complete the test notification to confirm setup.",
+    "ground_truth_context": ["Setup on iOS or Android", "aka.ms/mfasetup"]
+  },
+  {
+    "question": "My MFA codes keep getting rejected even though I'm entering them correctly.",
+    "ground_truth": "TOTP codes are time-based. If your phone clock is wrong by more than 30 seconds, codes will fail. Enable automatic time sync: on iOS go to Settings → General → Date & Time → Set Automatically; on Android go to Settings → General Management → Date and Time → Automatic date and time. Wait 30 seconds for a new code and try again.",
+    "ground_truth_context": ["MFA Codes Not Working", "time sync", "TOTP codes are time-based"]
+  },
+  {
+    "question": "What is the minimum password length required?",
+    "ground_truth": "The minimum password length is 14 characters. Passwords must also contain characters from at least three of four categories: uppercase letters, lowercase letters, numbers, and special characters.",
+    "ground_truth_context": ["Minimum length: 14 characters", "Password Requirements"]
+  },
+  {
+    "question": "How often do passwords expire?",
+    "ground_truth": "Standard account passwords expire every 90 days. Privileged accounts (admin and service accounts) expire every 60 days. You receive email reminders starting 14 days before expiration.",
+    "ground_truth_context": ["Password Rotation", "90 days", "60 days"]
+  },
+  {
+    "question": "Can I reuse an old password?",
+    "ground_truth": "No. You may not reuse any of your last 24 passwords.",
+    "ground_truth_context": ["No reuse: You may not reuse any of your last 24 passwords"]
+  },
+  {
+    "question": "How do I request access to a shared mailbox?",
+    "ground_truth": "Go to the IT Service Portal at https://itportal.acme-financial.internal, select Access Requests → Shared Mailbox Access, enter the mailbox email address and your business justification. Your manager will receive an approval request and access is granted within 1 business day of approval.",
+    "ground_truth_context": ["Requesting Access to an Existing Shared Mailbox", "IT Service Portal"]
+  },
+  {
+    "question": "How do I send an email from a shared mailbox in Outlook?",
+    "ground_truth": "When composing an email, click the From field (or Options → From if not visible), click Other Email Address, type the shared mailbox address and click OK. The email will be sent from the shared address and saved in the shared mailbox's Sent Items.",
+    "ground_truth_context": ["Sending Email From a Shared Mailbox"]
+  },
+  {
+    "question": "How do I install software that isn't in the Software Center?",
+    "ground_truth": "Go to the IT Service Portal at https://itportal.acme-financial.internal, select Software Requests → New Software Request, and fill in the software name, version, vendor, business justification, and whether it handles regulated data. Your manager approves the business case, then IT Security conducts a review typically taking 3–5 business days.",
+    "ground_truth_context": ["Requesting Software Not in the Catalog", "IT Service Portal"]
+  },
+  {
+    "question": "Can I install personal software on my work laptop?",
+    "ground_truth": "No. Installing personal, unlicensed, or unapproved software on company devices is prohibited under the Acceptable Use Policy. Violations may result in device wipe and disciplinary action.",
+    "ground_truth_context": ["Personal Software on Company Devices", "Acceptable Use Policy"]
+  },
+  {
+    "question": "How do I add a printer after moving to a new floor?",
+    "ground_truth": "Open File Explorer and type \\\\printserver.acme-financial.internal in the address bar, press Enter, then open the folder for your floor (e.g., Floor5). Double-click each printer you want to add — Windows installs the driver automatically. Right-click the printer and select Set as default printer to make it the default.",
+    "ground_truth_context": ["Ticket INC0000987", "printserver.acme-financial.internal"]
+  },
+  {
+    "question": "Outlook is crashing immediately after a Windows update. What should I do?",
+    "ground_truth": "This is a known issue with KB5034441 conflicting with the Bloomberg Outlook Add-in. Open Control Panel → Programs → Outlook Add-ins, disable the Bloomberg Outlook Add-In, then restart Outlook. As a workaround, use Outlook Web Access at https://mail.acme-financial.com until Bloomberg releases their patch.",
+    "ground_truth_context": ["Ticket INC0001042", "KB5034441", "Bloomberg Outlook Add-In"]
+  },
+  {
+    "question": "I can access SharePoint from the office but not from home. Why?",
+    "ground_truth": "Internal SharePoint sites use network-location-based Conditional Access that requires a corporate IP. Connect to the GlobalProtect VPN first, then retry the SharePoint URL. If the issue persists while connected to VPN, contact the helpdesk.",
+    "ground_truth_context": ["Ticket INC0001088", "Conditional Access", "VPN"]
+  },
+  {
+    "question": "How do I enroll my new laptop in Intune?",
+    "ground_truth": "Open Settings → Accounts → Access work or school, click Connect, enter your corporate email, sign in with your AD credentials, and select Join this device to Azure Active Directory. Restart the device — Intune policies apply during the restart. The Company Portal app will appear in the Start menu when enrollment is complete.",
+    "ground_truth_context": ["Windows Laptop Enrollment", "Azure Active Directory", "Intune"]
+  },
+  {
+    "question": "Is VPN required when working from a coffee shop?",
+    "ground_truth": "Yes. The Remote Work Security Policy requires connection to the corporate VPN (GlobalProtect) when accessing any internal system from a public network. If the VPN connection drops, stop work until it reconnects.",
+    "ground_truth_context": ["Public Wi-Fi", "VPN required", "Remote Work Security Policy"]
+  },
+  {
+    "question": "How do I request a standing desk or ergonomic equipment?",
+    "ground_truth": "I was unable to find information about requesting ergonomic equipment in the IT knowledge base. This is likely handled by Facilities or HR, not IT. Please contact the helpdesk at ext. 4357 and they can direct your request to the right team.",
+    "ground_truth_context": [],
+    "expected_low_confidence": true
+  },
+  {
+    "question": "What is the process to onboard a new contractor and give them system access?",
+    "ground_truth": "The IT knowledge base does not contain a contractor onboarding procedure. This process is typically managed by HR in coordination with IT. Please contact the IT Helpdesk at ext. 4357 or submit a ticket via https://itportal.acme-financial.internal for guidance.",
+    "ground_truth_context": [],
+    "expected_low_confidence": true
+  }
+]

@@ -1,0 +1,57 @@
+Title: VPN Setup and Troubleshooting (GlobalProtect)
+Source URL: https://wiki.acme-financial.internal/display/IT/vpn-setup
+Last Updated: 2026-02-20
+Document Type: how-to
+
+---
+
+# VPN Setup and Troubleshooting (GlobalProtect)
+
+ACME Financial uses Palo Alto GlobalProtect for remote access. The VPN is required to access internal systems (SharePoint, file shares, internal applications) from outside the office network.
+
+## Installing GlobalProtect
+
+### Windows
+1. Open the Software Center (Start → Software Center or search from taskbar).
+2. Search for "GlobalProtect" and click Install.
+3. The client installs silently; a globe icon appears in your system tray when complete.
+4. If Software Center is not available, contact the IT Helpdesk to push the installer.
+
+### macOS
+1. Open Self Service (Jamf) from your Applications folder.
+2. Search for "GlobalProtect" and click Install.
+3. When prompted, allow the system extension in System Preferences → Security & Privacy.
+4. The globe icon appears in your menu bar when installation is complete.
+
+## Connecting to the VPN
+
+1. Click the GlobalProtect globe icon in the system tray or menu bar.
+2. Enter the gateway: vpn.acme-financial.com
+3. Enter your corporate credentials (same as your AD username and password).
+4. Complete the MFA prompt in Microsoft Authenticator.
+5. Click Connect. A green icon indicates a successful connection.
+
+## VPN Not Connecting After a Password Change
+
+This is the most common VPN issue. GlobalProtect caches your credentials. After an AD password reset:
+
+1. Click the globe icon and select Disconnect (if currently connected).
+2. Click the gear icon → Settings → Clear Credentials.
+3. Click Connect and enter your new AD password when prompted.
+4. Complete the MFA challenge.
+
+If the issue persists, try: right-click the globe icon → Quit GlobalProtect, reopen it from Start/Applications, then reconnect.
+
+## Split Tunneling
+
+By default, GlobalProtect routes all traffic through the corporate network (full tunnel). This is required for compliance with ACME Financial's data handling policies. Split tunneling is not available for standard employees. Contact the security team (security@acme-financial.com) if you have a business case for an exception.
+
+## Troubleshooting
+
+**"Cannot connect to gateway" error:** Check your internet connection. The VPN gateway requires outbound TCP 443 and UDP 4501. Home firewalls or restrictive hotel networks may block these. Try connecting on mobile hotspot to isolate the issue.
+
+**Repeated MFA prompts:** Your MFA session has expired. Complete the Authenticator challenge. If your Authenticator app is showing incorrect codes, see the MFA Setup guide for re-sync instructions.
+
+**VPN connects but internal sites still unreachable:** Allow 30 seconds after connection for DNS to update. If the issue continues, disconnect and reconnect. If still failing, run: `gpdiag` from the command line and share the log with the helpdesk.
+
+**macOS: "System Extension Blocked" message:** Go to System Preferences → Security & Privacy → General. Click "Allow" next to the Palo Alto Networks message. Requires admin credentials. If you do not have local admin rights, contact the helpdesk.

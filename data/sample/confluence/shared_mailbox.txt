@@ -1,0 +1,54 @@
+Title: Requesting and Using Shared Mailboxes in Outlook
+Source URL: https://wiki.acme-financial.internal/display/IT/shared-mailbox
+Last Updated: 2025-11-30
+Document Type: how-to
+
+---
+
+# Requesting and Using Shared Mailboxes in Outlook
+
+Shared mailboxes allow teams to manage a common email address (e.g., compliance@acme-financial.com, trading-desk@acme-financial.com) without a separate licensed account.
+
+## Requesting Access to an Existing Shared Mailbox
+
+1. Go to the IT Service Portal: https://itportal.acme-financial.internal
+2. Select "Access Requests" → "Shared Mailbox Access".
+3. Enter the shared mailbox email address and your business justification.
+4. Your manager will receive an approval request. Access is granted within 1 business day of approval.
+
+Alternatively, the mailbox owner (the person designated as the mailbox manager) can open a ticket requesting you be added. They do not need manager approval if you are within their team.
+
+## Adding a Shared Mailbox in Outlook (Windows)
+
+Once access has been granted:
+
+1. Open Outlook.
+2. Go to File → Account Settings → Account Settings.
+3. Select your Exchange account → Change → More Settings → Advanced.
+4. Under "Open these additional mailboxes", click Add.
+5. Type the shared mailbox address and click OK → Apply → Finish.
+6. The shared mailbox appears in your folder list on the left panel.
+
+Alternatively, the mailbox often appears automatically in Outlook within 24 hours of access being granted — check your folder list before following the manual steps.
+
+## Sending Email From a Shared Mailbox
+
+1. When composing an email, click the "From" field (if not visible, click Options → From).
+2. Click "From" → "Other Email Address".
+3. Type the shared mailbox address and click OK.
+4. The email will be sent from the shared address and saved in the shared mailbox's Sent Items.
+
+## Removing a Shared Mailbox from Outlook
+
+If a mailbox is showing that you no longer need access to:
+1. Right-click the mailbox name in the folder panel.
+2. Select "Remove Shared Mailbox".
+This only removes it from your Outlook view. It does not revoke your access — submit an access removal request via the IT portal if you should no longer have access.
+
+## Shared Mailbox on Mobile (Outlook for iOS/Android)
+
+1. Open Outlook → tap your profile icon → Add Account → Add a Shared Mailbox.
+2. Enter the shared mailbox address.
+3. The mailbox appears as a separate account in the app.
+
+Note: You must already have access granted before adding it to mobile. If the mailbox does not appear, allow 30 minutes after access is granted and try again.

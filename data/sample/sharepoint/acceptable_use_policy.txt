@@ -1,0 +1,63 @@
+Title: Acceptable Use Policy — IT Systems and Equipment
+Source URL: https://acme-financial.sharepoint.com/sites/IT/Policies/AcceptableUse.aspx
+Last Updated: 2025-09-01
+Document Type: policy
+
+---
+
+# Acceptable Use Policy — IT Systems and Equipment
+
+Policy Number: IT-SEC-003
+Effective Date: 2025-09-01
+Review Date: 2026-09-01
+Owner: Information Security
+
+## Purpose
+
+This policy defines acceptable use of ACME Financial IT systems, equipment, and network resources to protect the firm from legal, regulatory, and security risk.
+
+## Approved Software
+
+Only software approved by IT may be installed on company-owned devices. Refer to the Software Request process (see How to Request Software Installation) to request unlisted software. Employees who install unapproved software may have their device wiped and reimaged without prior notice.
+
+The following software categories are explicitly prohibited:
+- Peer-to-peer file sharing applications (BitTorrent, LimeWire, etc.)
+- Cryptocurrency mining software
+- Personal VPN or proxy tools (unless specifically approved by IT Security)
+- Remote access tools not approved by IT (TeamViewer personal, AnyDesk personal edition)
+- Hacking or penetration testing tools on non-IT-approved systems
+
+## Internet Use
+
+The corporate internet connection is for business use. Reasonable personal use is permitted provided it does not:
+- Consume excessive bandwidth (e.g., streaming HD video during business hours)
+- Expose the network to security risk
+- Violate applicable law
+
+The following sites are blocked by the web filter and access attempts are logged: gambling, adult content, known malware distribution sites, and social media (limited exceptions for Marketing team).
+
+## Data Handling
+
+Company data must be stored on approved corporate systems (SharePoint, approved cloud drives, company file servers). It must not be:
+- Uploaded to personal cloud storage (Google Drive personal, Dropbox personal, iCloud)
+- Emailed to personal email addresses
+- Copied to unencrypted personal USB drives
+
+Data classified as Confidential or Restricted (see Data Classification Policy) requires additional controls. Contact the Information Security team before handling such data on portable media.
+
+## Company Equipment
+
+Company devices are provided for business use. Employees are responsible for:
+- Keeping devices physically secure (do not leave unlocked in public places)
+- Reporting loss or theft immediately to the IT Helpdesk and their manager
+- Not allowing non-employees to use company devices
+
+Company devices may be inspected by IT at any time. There is no expectation of privacy on company-owned equipment.
+
+## Remote Work
+
+Employees working remotely must connect via the corporate VPN (GlobalProtect) before accessing internal systems. Working from public Wi-Fi (coffee shops, airports) is permitted only while connected to the VPN. Refer to the Remote Work Security Policy for full requirements.
+
+## Violations
+
+Suspected violations of this policy should be reported to the IT Security team or via the anonymous ethics hotline. Confirmed violations may result in disciplinary action.

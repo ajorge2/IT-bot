@@ -1,0 +1,50 @@
+[
+  {
+    "id": "INC0001042",
+    "subject": "Outlook keeps crashing after Windows update",
+    "description": "Outlook crashes immediately on launch after the Windows update pushed last Tuesday (KB5034441). Other Office apps work fine. Tried restarting multiple times.",
+    "resolution": "This is a known issue with KB5034441 conflicting with the Outlook add-in for Bloomberg Terminal. Resolution steps: 1) Open Control Panel → Programs → Outlook Add-ins. 2) Disable the Bloomberg Outlook Add-In. 3) Restart Outlook — it should launch normally. 4) Re-enable the add-in after Bloomberg releases their patch (ETA: within 5 business days). Workaround: Use Outlook Web Access (OWA) at https://mail.acme-financial.com until the permanent fix is available.",
+    "resolved_at": "2026-03-12T14:22:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001042"
+  },
+  {
+    "id": "INC0001107",
+    "subject": "VPN will not connect after password reset",
+    "description": "Changed AD password via SSPR yesterday. Now GlobalProtect VPN shows 'Authentication failed' and won't connect. Tried multiple times.",
+    "resolution": "GlobalProtect caches credentials and does not pick up password changes automatically. Steps to fix: 1) Click the GlobalProtect icon in the system tray. 2) Click the gear icon → Settings → 'Clear Credentials'. 3) Click Connect and enter your NEW password. 4) Complete the MFA prompt. If 'Clear Credentials' is not visible, right-click the icon → Quit GlobalProtect, then relaunch it from the Start menu and reconnect. This resolves the issue in 100% of cases where the cause is a password change.",
+    "resolved_at": "2026-02-28T09:15:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001107"
+  },
+  {
+    "id": "INC0000987",
+    "subject": "Network printer not showing up after moving to new floor",
+    "description": "Moved from Floor 3 to Floor 5 last week. The printers on Floor 3 still show in Devices and Printers but the Floor 5 printers are not visible. Need to print urgently.",
+    "resolution": "Printers are assigned by floor/location in our print server. To add Floor 5 printers: 1) Open File Explorer → type \\\\printserver.acme-financial.internal in the address bar → press Enter. 2) You will see folders for each floor. Open the 'Floor5' folder. 3) Double-click each printer you want to add — Windows will install the driver automatically. 4) The printer will appear in Devices and Printers. Default printer: right-click the printer → 'Set as default printer'. Old Floor 3 printers can be removed: right-click → Remove device.",
+    "resolved_at": "2026-03-05T11:45:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0000987"
+  },
+  {
+    "id": "INC0001055",
+    "subject": "Microsoft Authenticator codes rejected, can't log in to anything",
+    "description": "Started this morning. All my Authenticator codes for the ACME Financial account are being rejected with 'Invalid code'. Pushed a new phone update last night. Can't access email or VPN.",
+    "resolution": "The phone update changed the system clock sync setting, causing TOTP codes to be out of sync. Fix: 1) On your iPhone: Settings → General → Date & Time → turn on 'Set Automatically'. On Android: Settings → General Management → Date and Time → enable 'Automatic date and time'. 2) Wait 30 seconds for a fresh code to generate. 3) Try signing in again. If codes still fail: open the Authenticator app → tap your ACME Financial account → 'Verify devices' → 'Sync now'. This resolved the issue for this user. If time sync does not resolve it, the account may need to be re-registered — contact the helpdesk with your employee ID for an MFA bypass.",
+    "resolved_at": "2026-03-10T08:30:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001055"
+  },
+  {
+    "id": "INC0001088",
+    "subject": "Cannot access SharePoint from home, works in office",
+    "description": "SharePoint intranet (https://acme-financial.sharepoint.com/sites/IT) loads fine from the office but gives 'Access denied' when trying from home. Checked credentials are correct.",
+    "resolution": "Internal SharePoint sites that are configured as intranet zones require VPN when accessed remotely. The SharePoint site in question uses network-location-based Conditional Access (requires corporate IP). Resolution: 1) Connect to the GlobalProtect VPN (see VPN Setup guide). 2) After VPN connection shows green, retry the SharePoint URL. 3) The site should load normally. Note: Microsoft 365 consumer features (Teams, personal OneDrive) do not require VPN. Only internal/on-prem integrated SharePoint sites have this restriction. If the issue persists while connected to VPN, contact the helpdesk — the user may need a Conditional Access exception reviewed.",
+    "resolved_at": "2026-02-18T16:00:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001088"
+  },
+  {
+    "id": "INC0001201",
+    "subject": "Laptop running very slowly, fan always on, battery drains in 2 hours",
+    "description": "Dell XPS 15, about 2 years old. Extremely slow since last month. Task Manager shows high CPU usage even when nothing is open. Fan runs constantly and battery life dropped from 8 hours to under 2 hours.",
+    "resolution": "Investigation found the Cylance antivirus agent had entered a loop scanning a corrupted temp file, consuming 80%+ CPU continuously. Resolution: 1) IT remote-connected and cleared the Cylance scan queue via the management console. 2) Deleted the corrupted temp file in C:\\Windows\\Temp. 3) Restarted the Cylance service. Performance returned to normal immediately. Battery drain was a symptom of sustained CPU load — no hardware issue. Device is now healthy. If this recurs, user should call helpdesk immediately rather than waiting — sustained high CPU shortens SSD and battery lifespan.",
+    "resolved_at": "2026-04-01T13:10:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001201"
+  }
+]

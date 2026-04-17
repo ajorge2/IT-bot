@@ -1,0 +1,60 @@
+Title: Setting Up Multi-Factor Authentication (MFA)
+Source URL: https://wiki.acme-financial.internal/display/IT/mfa-setup
+Last Updated: 2026-01-10
+Document Type: how-to
+
+---
+
+# Setting Up Multi-Factor Authentication (MFA)
+
+Multi-factor authentication (MFA) is mandatory for all ACME Financial employees. MFA is required to log into Microsoft 365, the VPN, and all internal web applications.
+
+## Recommended Method: Microsoft Authenticator App
+
+The Microsoft Authenticator app is the fastest and most reliable MFA method. It supports one-tap push notifications and works without a mobile signal (offline TOTP codes).
+
+### Setup on iOS or Android
+1. Download "Microsoft Authenticator" from the App Store or Google Play.
+2. On your work computer, go to https://aka.ms/mfasetup (requires you to be signed in to Microsoft 365).
+3. Click "Add sign-in method" → select "Authenticator app" → "Download now" → "Next".
+4. Open the Authenticator app on your phone → tap the "+" → "Work or school account" → "Scan QR code".
+5. Scan the QR code shown on your computer screen.
+6. Complete the test notification on your phone to confirm setup.
+
+### Using Authenticator for Sign-In
+- **Push notification (recommended):** Tap "Approve" on your phone when prompted. Available when you have an internet connection.
+- **One-time code (offline fallback):** Open Authenticator, tap your ACME Financial account. A 6-digit code refreshes every 30 seconds. Enter it when prompted.
+
+## MFA Codes Not Working
+
+If your 6-digit TOTP codes are being rejected:
+
+1. **Check time sync on your phone.** TOTP codes are time-based. If your phone clock is wrong by more than 30 seconds, codes will fail.
+   - iOS: Settings → General → Date & Time → enable "Set Automatically"
+   - Android: Settings → General Management → Date and Time → enable "Automatic date and time"
+2. After enabling automatic time, wait 30 seconds for a new code to generate and try again.
+3. If codes still fail after a time sync, open Authenticator → tap your account → "Verify devices" (if available) → "Sync now".
+
+## Backup MFA Methods
+
+You should register at least two MFA methods in case you lose access to your primary device. To add a backup method:
+
+1. Go to https://aka.ms/mfasetup
+2. Click "Add sign-in method"
+3. Options: phone call to your registered mobile, SMS to registered mobile, backup email (personal email allowed for MFA only)
+
+Important: Backup methods are for MFA only. Your corporate email password must never be sent to a personal account.
+
+## Lost or Replaced Phone
+
+If you get a new phone or lose your current one:
+
+1. Contact the IT Helpdesk immediately (ext. 4357) to temporary bypass MFA and de-register your old device.
+2. Set up the Authenticator app on your new phone using the setup steps above.
+3. Verify the new method works before the helpdesk removes the bypass.
+
+Do not delay reporting a lost phone — your MFA credentials could be compromised.
+
+## Hardware Token (YubiKey) — Executives and Privileged Accounts
+
+Executives and accounts with privileged access (admin rights, access to trading systems) are required to use a YubiKey hardware token in addition to the Authenticator app. Contact the helpdesk to request a YubiKey if you have not been issued one.

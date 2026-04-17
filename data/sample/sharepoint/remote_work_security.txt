@@ -1,0 +1,58 @@
+Title: Remote Work Security Policy
+Source URL: https://acme-financial.sharepoint.com/sites/IT/Policies/RemoteWorkSecurity.aspx
+Last Updated: 2026-03-01
+Document Type: policy
+
+---
+
+# Remote Work Security Policy
+
+Policy Number: IT-SEC-007
+Effective Date: 2026-03-01
+Review Date: 2027-03-01
+Owner: Information Security
+
+## Scope
+
+This policy applies to all employees, contractors, and vendors who access ACME Financial systems from outside the corporate office network.
+
+## VPN Requirement
+
+Connection to the corporate VPN (GlobalProtect) is mandatory when accessing any internal ACME Financial system from a remote location. This includes:
+- Internal web applications and intranets
+- Corporate SharePoint and file shares
+- Email via Outlook desktop (Outlook Web Access / OWA is permitted without VPN for email only)
+- Internal databases and trading systems
+
+The only systems accessible without VPN are: Microsoft 365 (Teams, OWA, OneDrive for Business), Zoom, and vendor-hosted SaaS tools approved by IT. All other systems require VPN.
+
+## Home Network Security
+
+While ACME Financial cannot mandate your home router configuration, the following are strongly recommended:
+- Use WPA3 or WPA2 encryption on your home Wi-Fi (never WEP or open networks)
+- Change your router's default admin password
+- Keep router firmware updated
+
+## Public Wi-Fi
+
+Accessing corporate systems over public Wi-Fi (airports, cafes, hotels) is permitted only when connected to the corporate VPN. Never access corporate systems without VPN on a public network. If the VPN connection drops, stop work until it reconnects.
+
+## Physical Security at Home
+
+- Position your screen so it is not visible from windows or public spaces if you are handling sensitive data.
+- Use a privacy screen filter if you work in shared spaces such as co-working areas.
+- Lock your workstation (Win+L / Ctrl+Cmd+Q) when stepping away, even at home.
+
+## Printing Sensitive Documents
+
+Printing confidential or restricted documents to personal home printers is prohibited unless IT has approved a secure home printing arrangement. Contact the helpdesk if you have a legitimate need to print restricted documents remotely.
+
+## Incident Reporting
+
+If you suspect your remote working environment has been compromised (e.g., unknown device on your home network, suspicious activity on company accounts), report it immediately to:
+- IT Helpdesk: ext. 4357 or security@acme-financial.com
+- Do not wait until you are back in the office.
+
+## Non-Compliance
+
+Employees who access corporate systems in violation of this policy may have remote access revoked pending an investigation.
