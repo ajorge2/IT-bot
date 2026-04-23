@@ -4,73 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IT Knowledge Base</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     :root {
-      --bg:         #090b10;
-      --surface:    #0e1018;
-      --border:     #1e2232;
-      --accent:     #1a5fff;
-      --accent-dim: #0a1f66;
-      --text:       #dde1f0;
-      --muted:      #6b7190;
-      --red:        #dc2626;
-      --sans:       -apple-system, 'Inter', sans-serif;
-      --mono:       'Courier New', Menlo, monospace;
+      --bg:      #f7f7f5;
+      --surface: #ffffff;
+      --border:  #e8e8e4;
+      --accent:  #1a5fff;
+      --text:    #1a1a2e;
+      --muted:   #999992;
+      --red:     #dc2626;
+      --sans:    'DM Serif Display', serif;
+      --ui:      -apple-system, 'Inter', sans-serif;
+      --mono:    'Courier New', Menlo, monospace;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html, body { height: 100%; overflow: hidden; }
 
     body {
       font-family: var(--sans);
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: 14px;
+      line-height: 1.6;
       background: var(--bg);
       color: var(--text);
       display: flex;
       flex-direction: column;
     }
 
-    /* Film grain */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.055;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-    }
-
-    /* Scrollbars */
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-    /* ── Header ──────────────────────────────────────────────────────── */
-    header {
-      flex-shrink: 0;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 10px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    header h1 {
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    header p {
-      font-family: var(--sans);
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    /* ── Chat area ───────────────────────────────────────────────────── */
+    /* ── Chat area ── */
     #chat-outer {
       flex: 1;
       overflow: hidden;
@@ -79,16 +47,16 @@
     }
     #chat {
       width: 100%;
-      max-width: 840px;
+      max-width: 760px;
       height: 100%;
       overflow-y: auto;
-      padding: 20px 20px 8px;
+      padding: 32px 28px 12px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 20px;
     }
 
-    /* ── Empty state ─────────────────────────────────────────────────── */
+    /* ── Empty state ── */
     #empty {
       flex: 1;
       display: flex;
@@ -97,94 +65,161 @@
       justify-content: center;
       gap: 6px;
       text-align: center;
+      opacity: 0.4;
       pointer-events: none;
+      animation: fade-in 0.6s ease both;
     }
-    #empty p {
-      font-family: var(--sans);
-      font-size: 13px;
-      color: var(--muted);
+    #empty p { font-size: 15px; color: var(--muted); }
+    #empty span { font-family: var(--ui); font-size: 12px; color: var(--muted); }
+
+    /* ── Message entrance ── */
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    #empty span {
-      font-family: var(--sans);
-      font-size: 11px;
-      color: var(--muted);
-      opacity: 0.5;
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
 
-    /* ── Message wrappers ────────────────────────────────────────────── */
     .msg-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 8px;
+      animation: slide-up 0.25s ease both;
     }
     .msg-wrapper.user      { align-items: flex-end; }
     .msg-wrapper.assistant { align-items: flex-start; }
 
-    /* ── Bubbles ─────────────────────────────────────────────────────── */
+    /* ── Bubbles ── */
     .bubble {
-      max-width: 80%;
-      padding: 12px 14px;
-      border-radius: 5px;
-      font-family: var(--sans);
-      font-size: 13px;
-      line-height: 1.55;
-      white-space: pre-wrap;
+      max-width: 78%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.6;
       word-break: break-word;
-      border: 1px solid var(--border);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-      transition: border-color 0.15s, transform 0.15s;
     }
     .bubble.user {
-      background: var(--accent-dim);
-      border-color: var(--accent);
-      color: var(--text);
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--ui);
+      font-size: 13px;
+      border-radius: 12px 12px 3px 12px;
+      white-space: pre-wrap;
     }
     .bubble.assistant {
       background: var(--surface);
       color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 3px 12px 12px 12px;
+      font-family: var(--ui);
     }
-    .bubble.assistant:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
+    .bubble.assistant h1, .bubble.assistant h2, .bubble.assistant h3 {
+      font-family: var(--sans);
+      font-weight: 400;
+      margin: 10px 0 4px;
     }
+    .bubble.assistant h1 { font-size: 16px; }
+    .bubble.assistant h2 { font-size: 14px; }
+    .bubble.assistant h3 { font-size: 13px; }
+    .bubble.assistant p  { margin: 0 0 8px; }
+    .bubble.assistant p:last-child { margin-bottom: 0; }
+    .bubble.assistant ul, .bubble.assistant ol { padding-left: 18px; margin: 0 0 8px; }
+    .bubble.assistant li { margin-bottom: 3px; }
+    .citation-ref {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      background: none;
+      border: 1px solid var(--accent);
+      border-radius: 3px;
+      padding: 0 3px;
+      cursor: pointer;
+      vertical-align: middle;
+      line-height: 1.4;
+      transition: background 0.15s, color 0.15s;
+    }
+    .citation-ref:hover { background: var(--accent); color: #fff; }
 
-    @keyframes flash-in {
-      from { background: rgba(220,38,38,0.25); }
-      to   { background: var(--surface); }
+    .bubble.assistant code {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 4px;
     }
-    .bubble.flash { animation: flash-in 1.2s ease-out forwards; }
+    .bubble.assistant pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      overflow-x: auto;
+      margin: 6px 0;
+    }
+    .bubble.assistant pre code { background: none; border: none; padding: 0; }
 
-    /* ── Sources panel ───────────────────────────────────────────────── */
+    /* doc view markdown */
+    #doc-view-body h1, #doc-view-body h2, #doc-view-body h3 {
+      font-family: var(--sans);
+      font-weight: 400;
+      margin: 16px 0 6px;
+    }
+    #doc-view-body h1 { font-size: 18px; }
+    #doc-view-body h2 { font-size: 15px; }
+    #doc-view-body h3 { font-size: 13px; }
+    #doc-view-body p  { margin: 0 0 10px; }
+    #doc-view-body ul, #doc-view-body ol { padding-left: 20px; margin: 0 0 10px; }
+    #doc-view-body li { margin-bottom: 4px; }
+    #doc-view-body code {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--border);
+      border-radius: 3px;
+      padding: 1px 4px;
+    }
+    #doc-view-body pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      overflow-x: auto;
+      margin: 8px 0;
+    }
+    #doc-view-body pre code { background: none; padding: 0; }
+
+    /* ── Sources panel ── */
     details.sources {
-      max-width: 80%;
+      max-width: 78%;
       width: 100%;
       border: 1px solid var(--border);
-      border-radius: 5px;
+      border-radius: 10px;
       background: var(--surface);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      overflow: hidden;
     }
     details.sources > summary {
       list-style: none;
-      padding: 10px 16px;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       gap: 8px;
       cursor: pointer;
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 600;
+      font-family: var(--ui);
+      font-size: 12px;
       color: var(--muted);
-      border-bottom: 1px solid transparent;
       user-select: none;
       transition: color 0.15s;
     }
     details.sources > summary:hover { color: var(--text); }
-    details.sources[open] > summary { border-bottom-color: var(--border); }
+    details.sources[open] > summary {
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
     details.sources > summary .chevron {
-      font-family: var(--mono);
       font-size: 9px;
       color: var(--accent);
-      transition: transform 0.15s;
+      transition: transform 0.2s ease;
       display: inline-block;
     }
     details.sources[open] > summary .chevron { transform: rotate(90deg); }
@@ -193,127 +228,124 @@
       font-size: 10px;
       color: var(--accent);
       border: 1px solid var(--accent);
-      border-radius: 4px;
+      border-radius: 3px;
       padding: 1px 5px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
     }
     .sources-list {
-      padding: 10px 16px 14px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
     }
     .source-item {
       padding: 8px 10px;
       border: 1px solid var(--border);
-      border-radius: 5px;
+      border-radius: 7px;
       background: var(--bg);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
       transition: border-color 0.15s, transform 0.15s;
     }
     .source-item:hover {
       border-color: var(--accent);
-      transform: translateY(-2px);
+      transform: translateY(-1px);
     }
     .source-index {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 9px;
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 0.8px;
     }
     .source-title {
-      font-family: var(--sans);
-      font-size: 13px;
+      font-family: var(--ui);
+      font-size: 12px;
+      font-weight: 500;
       color: var(--text);
       text-decoration: none;
       display: block;
       margin-top: 2px;
+      background: none;
+      border: none;
+      padding: 0;
+      text-align: left;
+      cursor: pointer;
+      transition: color 0.15s;
     }
-    a.source-title:hover { color: var(--accent); }
+    .source-title:hover { color: var(--accent); }
     .source-meta {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 9px;
       color: var(--muted);
       margin-top: 3px;
     }
 
-    /* ── Disclaimer ──────────────────────────────────────────────────── */
+    /* ── Disclaimer ── */
     .disclaimer {
-      max-width: 80%;
-      font-family: var(--sans);
-      font-size: 13px;
+      max-width: 78%;
+      font-family: var(--ui);
+      font-size: 12px;
       line-height: 1.5;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-left: 2px solid var(--accent);
-      border-radius: 5px;
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
       padding: 10px 14px;
-      color: var(--text);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      color: var(--muted);
     }
 
-    /* ── Ticket draft ────────────────────────────────────────────────── */
+    /* ── Ticket draft ── */
     details.ticket-draft {
-      max-width: 80%;
+      max-width: 78%;
       width: 100%;
       border: 1px solid var(--border);
-      border-left: 2px solid var(--red);
-      border-radius: 5px;
+      border-left: 3px solid var(--red);
+      border-radius: 8px;
       background: var(--surface);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      overflow: hidden;
     }
     details.ticket-draft > summary {
       list-style: none;
-      padding: 10px 16px;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       gap: 8px;
       cursor: pointer;
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 600;
+      font-family: var(--ui);
+      font-size: 12px;
       color: var(--red);
-      border-bottom: 1px solid transparent;
       user-select: none;
-      transition: color 0.15s;
     }
-    details.ticket-draft[open] > summary { border-bottom-color: var(--border); }
+    details.ticket-draft[open] > summary { border-bottom: 1px solid var(--border); }
     details.ticket-draft > summary .chevron {
-      font-family: var(--mono);
       font-size: 9px;
-      color: var(--red);
-      transition: transform 0.15s;
+      transition: transform 0.2s ease;
       display: inline-block;
     }
     details.ticket-draft[open] > summary .chevron { transform: rotate(90deg); }
     .ticket-body {
-      padding: 12px 16px 16px;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
     .ticket-label {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 9px;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.8px;
     }
     .ticket-subject-text {
-      font-family: var(--sans);
+      font-family: var(--ui);
       font-size: 13px;
       color: var(--text);
-      margin-top: 2px;
     }
     .ticket-body textarea {
       width: 100%;
       resize: vertical;
-      min-height: 110px;
+      min-height: 100px;
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 5px;
+      border-radius: 6px;
       padding: 10px;
       font-family: var(--mono);
       font-size: 11px;
@@ -323,38 +355,44 @@
     }
     .ticket-note {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 9px;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.6px;
     }
 
-    /* ── Thinking indicator ──────────────────────────────────────────── */
+    /* ── Thinking indicator ── */
     .thinking {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 0;
+      gap: 6px;
+      padding: 4px 0;
+      animation: fade-in 0.3s ease both;
+    }
+    .thinking-dots {
+      display: flex;
+      gap: 4px;
     }
     .thinking-dot {
       width: 5px;
       height: 5px;
       background: var(--accent);
       border-radius: 50%;
-      animation: pulse 1.2s ease-in-out infinite;
-      flex-shrink: 0;
+      animation: bounce 1.2s ease-in-out infinite;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.2; }
+    .thinking-dot:nth-child(2) { animation-delay: 0.15s; }
+    .thinking-dot:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+      40%           { transform: translateY(-5px); opacity: 1; }
     }
     .thinking-label {
-      font-family: var(--mono);
+      font-family: var(--ui);
       font-size: 11px;
       color: var(--muted);
     }
 
-    /* ── Input bar ───────────────────────────────────────────────────── */
+    /* ── Input bar ── */
     #input-bar-outer {
       flex-shrink: 0;
       background: var(--surface);
@@ -364,8 +402,8 @@
     }
     #input-bar {
       width: 100%;
-      max-width: 840px;
-      padding: 12px 20px 16px;
+      max-width: 760px;
+      padding: 14px 28px 18px;
       display: flex;
       gap: 10px;
       align-items: flex-end;
@@ -374,9 +412,9 @@
       flex: 1;
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 10px 12px;
-      font-family: var(--sans);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: var(--ui);
       font-size: 13px;
       color: var(--text);
       resize: none;
@@ -384,38 +422,367 @@
       line-height: 1.5;
       max-height: 160px;
       overflow-y: auto;
-      transition: border-color 0.15s;
+      transition: border-color 0.2s;
     }
-    #query::placeholder { color: var(--muted); opacity: 0.6; }
+    #query::placeholder { color: var(--muted); opacity: 0.7; }
     #query:focus { border-color: var(--accent); }
 
-    /* Primary button */
     #send {
       flex-shrink: 0;
       background: var(--accent);
       color: #fff;
       border: none;
-      border-radius: 5px;
-      padding: 0 18px;
+      border-radius: 10px;
+      padding: 0 20px;
       height: 40px;
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
+      font-family: var(--ui);
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
-      transition: background 0.15s;
+      transition: background 0.15s, transform 0.1s;
     }
-    #send:hover:not(:disabled) { background: #1450e0; }
+    #send:hover:not(:disabled) { background: #1450e0; transform: translateY(-1px); }
+    #send:active:not(:disabled) { transform: translateY(0); }
     #send:disabled { background: var(--border); color: var(--muted); cursor: default; }
+
+    /* ── Header ── */
+    header {
+      flex-shrink: 0;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: -0.3px;
+      color: var(--text);
+    }
+    #view-sources-btn {
+      font-family: var(--ui);
+      font-size: 12px;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    #view-sources-btn:hover { color: var(--text); border-color: var(--text); }
+
+    /* ── Sources index modal ── */
+    #sources-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      animation: fade-in 0.2s ease both;
+    }
+    #sources-overlay.hiding { animation: fade-out 0.2s ease both; }
+    #sources-modal {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 560px;
+      height: 80vh;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slide-up 0.25s ease both;
+    }
+    #sources-modal-header {
+      padding: 47px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    #sources-modal-header h2 { font-size: 18px; font-weight: 400; }
+    #sources-modal-header span {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    #sources-modal-body {
+      overflow-y: auto;
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+      min-height: 0;
+    }
+    .sources-section-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .sources-index-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sources-index-item {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      transition: border-color 0.15s, transform 0.15s;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+    }
+    .sources-index-item:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+    #sources-list-view {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* ── Doc content view ── */
+    #doc-view {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+    #doc-view-header {
+      padding: 18px 24px 14px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    #doc-view-back {
+      font-family: var(--ui);
+      font-size: 12px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      margin-bottom: 10px;
+      transition: color 0.15s;
+    }
+    #doc-view-back:hover { color: var(--text); }
+    #doc-view-title {
+      font-size: 17px;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+    #doc-view-meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+    }
+    #doc-view-body {
+      overflow-y: auto;
+      padding: 18px 24px;
+      font-family: var(--ui);
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text);
+      word-break: break-word;
+      flex: 1;
+      min-height: 0;
+    }
+    .sources-index-badge {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 3px;
+      padding: 1px 5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .sources-index-title {
+      font-family: var(--ui);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      flex: 1;
+    }
+    .sources-index-date {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .modal-close-x {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--red);
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.15s;
+      font-family: var(--ui);
+    }
+    .modal-close-x:hover { opacity: 1; }
+
+    /* ── Welcome modal ── */
+    #modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      animation: fade-in 0.2s ease both;
+    }
+    #modal-overlay.hiding {
+      animation: fade-out 0.2s ease both;
+    }
+    @keyframes fade-out {
+      from { opacity: 1; }
+      to   { opacity: 0; }
+    }
+    #modal {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      width: 100%;
+      max-width: 480px;
+      margin: 20px;
+      animation: slide-up 0.25s ease both;
+    }
+    #modal h2 {
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 6px;
+    }
+    #modal p {
+      font-family: var(--ui);
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .example-prompts {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .example-prompt {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: var(--ui);
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      background: var(--bg);
+      transition: border-color 0.15s, transform 0.15s, background 0.15s;
+    }
+    .example-prompt:hover {
+      border-color: var(--accent);
+      background: var(--surface);
+      transform: translateY(-1px);
+    }
   </style>
 </head>
 <body>
 
+<div id="modal-overlay">
+  <div id="modal">
+    <button class="modal-close-x" id="modal-dismiss">×</button>
+    <h2>IT Knowledge Base</h2>
+    <p>Ask any IT question or pick one below to get started.</p>
+    <div class="example-prompts">
+      <button class="example-prompt">How do I reset my password?</button>
+      <button class="example-prompt">How do I connect to the VPN?</button>
+      <button class="example-prompt">How do I set up email on my phone?</button>
+      <button class="example-prompt">What is the company's data classification policy?</button>
+      <button class="example-prompt">How do I request new software?</button>
+      <button class="example-prompt">My Microsoft Teams audio isn't working — how do I fix it?</button>
+    </div>
+  </div>
+</div>
+
 <header>
-  <h1>IT Knowledge Base</h1>
-  <p>Ask any IT question — password resets, VPN, software access, policies, and more.</p>
+  <h1>IT Knowledge Base <span style="font-family:var(--ui);font-size:11px;color:var(--muted);font-weight:400;letter-spacing:0;vertical-align:middle;">(Demo)</span></h1>
+  <button id="view-sources-btn">View source docs</button>
 </header>
+
+<div id="sources-overlay" style="display:none;">
+  <div id="sources-modal">
+    <button class="modal-close-x" id="sources-modal-close">×</button>
+    <!-- List view -->
+    <div id="sources-list-view" style="display:flex;flex-direction:column;overflow:hidden;">
+      <div id="sources-modal-header">
+        <h2>Source Documents</h2>
+        <span>17 documents</span>
+      </div>
+      <div id="sources-modal-body">
+        <div>
+          <div class="sources-section-label">Confluence — How-to guides (12)</div>
+          <div class="sources-index-list">
+            <button class="sources-index-item" data-source="confluence" data-slug="email_mobile_setup"><span class="sources-index-badge">how-to</span><span class="sources-index-title">Setting Up Corporate Email on iOS and Android</span><span class="sources-index-date">2026-02-10</span></button>
+            <button class="sources-index-item" data-source="confluence" data-slug="mdm_enrollment"><span class="sources-index-badge">how-to</span><span class="sources-index-title">Enrolling a New Device in Microsoft Intune (MDM)</span><span class="sources-index-date">2026-02-05</span></button>
+            <button class="sources-index-item" data-source="confluence" data-slug="mfa_setup"><span class="sources-index-badge">how-to</span><span class="sources-index-title">Setting Up Multi-Factor Authentication (MFA)</span><span class="sources-index-date">2026-01-10</span></button>
+            <button class="sources-index-item" data-source="confluence" data-slug="network_drive_mapping"><span class="sources-index-badge">how-to</span><span class="sources-index-title">Mapping Network Drives and Accessing File Shares</span><span class="sources-index-date">2026-01-18</span></button>
+            <button class="sources-index-item" data-source="confluence" data-slug="new_laptop_setup"><span class="sources-index-badge">how-to</span><span class="sources-index-title">New Laptop Setup — IT Onboarding Checklist</span><span class="sources-index-date">2026-03-01</span></button>
+            <button class="sources-index-item" data-source="confluence" data-slug="password_reset"><span class="sources-index-badge">how-to</span><span class="sources-index-title">How to Reset Your Active Directory Password</span><span class="sources-index-date">2026-03-15</span></button>
+            <button class="sources-index-item" data-source="confluence" data-slug="remote_desktop"><span class="sources-index-badge">how-to</span><span class="sources-index-title">Remote Desktop — Accessing Your Office Workstation from Home</span><span class="sources-index-date">2026-01-30</span></button>
+            <button class="sources-index-item" data-source="confluence" data-slug="shared_mailbox"><span class="sources-index-badge">how-to</span><span class="sources-index-title">Requesting and Using Shared Mailboxes in Outlook</span><span class="sources-index-date">2025-11-30</span></button>
+            <button class="sources-index-item" data-source="confluence" data-slug="software_installation"><span class="sources-index-badge">how-to</span><span class="sources-index-title">Requesting and Installing Software</span><span class="sources-index-date">2026-02-28</span></button>
+            <button class="sources-index-item" data-source="confluence" data-slug="software_request"><span class="sources-index-badge">how-to</span><span class="sources-index-title">How to Request Software Installation</span><span class="sources-index-date">2026-01-22</span></button>
+            <button class="sources-index-item" data-source="confluence" data-slug="teams_troubleshooting"><span class="sources-index-badge">how-to</span><span class="sources-index-title">Microsoft Teams — Common Issues and Fixes</span><span class="sources-index-date">2026-03-22</span></button>
+            <button class="sources-index-item" data-source="confluence" data-slug="vpn_setup"><span class="sources-index-badge">how-to</span><span class="sources-index-title">VPN Setup and Troubleshooting (GlobalProtect)</span><span class="sources-index-date">2026-02-20</span></button>
+          </div>
+        </div>
+        <div>
+          <div class="sources-section-label">SharePoint — Policies (5)</div>
+          <div class="sources-index-list">
+            <button class="sources-index-item" data-source="sharepoint" data-slug="acceptable_use_policy"><span class="sources-index-badge">policy</span><span class="sources-index-title">Acceptable Use Policy — IT Systems and Equipment</span><span class="sources-index-date">2025-09-01</span></button>
+            <button class="sources-index-item" data-source="sharepoint" data-slug="byod_policy"><span class="sources-index-badge">policy</span><span class="sources-index-title">Bring Your Own Device (BYOD) Policy</span><span class="sources-index-date">2025-12-15</span></button>
+            <button class="sources-index-item" data-source="sharepoint" data-slug="data_classification_policy"><span class="sources-index-badge">policy</span><span class="sources-index-title">Data Classification and Handling Policy</span><span class="sources-index-date">2025-11-01</span></button>
+            <button class="sources-index-item" data-source="sharepoint" data-slug="password_policy"><span class="sources-index-badge">policy</span><span class="sources-index-title">Password Policy — Requirements and Rotation Schedule</span><span class="sources-index-date">2026-01-01</span></button>
+            <button class="sources-index-item" data-source="sharepoint" data-slug="remote_work_security"><span class="sources-index-badge">policy</span><span class="sources-index-title">Remote Work Security Policy</span><span class="sources-index-date">2026-03-01</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Doc content view -->
+    <div id="doc-view">
+      <div id="doc-view-header">
+        <button id="doc-view-back">←</button>
+        <div id="doc-view-title"></div>
+        <div id="doc-view-meta"></div>
+      </div>
+      <div id="doc-view-body"></div>
+    </div>
+  </div>
+</div>
 
 <div id="chat-outer">
   <div id="chat">
@@ -434,6 +801,130 @@
 </div>
 
 <script>
+  // Modal
+  const overlay = document.getElementById('modal-overlay');
+
+  function closeModal() {
+    overlay.classList.add('hiding');
+    overlay.addEventListener('animationend', () => overlay.remove(), { once: true });
+  }
+
+  document.getElementById('modal-dismiss').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+  document.querySelectorAll('.example-prompt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.textContent;
+      closeModal();
+      setTimeout(() => {
+        input.value = text;
+        input.dispatchEvent(new Event('input'));
+        submit();
+      }, 200);
+    });
+  });
+
+  // Sources index modal
+  const sourcesOverlay = document.getElementById('sources-overlay');
+
+  document.getElementById('view-sources-btn').addEventListener('click', () => {
+    sourcesOverlay.style.display = 'flex';
+    sourcesOverlay.classList.remove('hiding');
+  });
+
+  function closeSourcesModal() {
+    sourcesOverlay.classList.add('hiding');
+    sourcesOverlay.addEventListener('animationend', () => {
+      sourcesOverlay.style.display = 'none';
+      sourcesOverlay.classList.remove('hiding');
+    }, { once: true });
+  }
+
+  document.getElementById('sources-modal-close').addEventListener('click', closeSourcesModal);
+  sourcesOverlay.addEventListener('click', e => { if (e.target === sourcesOverlay) closeSourcesModal(); });
+
+  const listView = document.getElementById('sources-list-view');
+  const docView  = document.getElementById('doc-view');
+
+  function showDocView() {
+    listView.style.display = 'none';
+    docView.style.display  = 'flex';
+  }
+  function showListView() {
+    docView.style.display  = 'none';
+    listView.style.display = 'flex';
+  }
+
+  document.getElementById('doc-view-back').addEventListener('click', showListView);
+
+  function linkifyCitations(el, citationMap) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const toReplace = [];
+    let node;
+    while ((node = walker.nextNode())) {
+      if (/\[\d+\]/.test(node.textContent)) toReplace.push(node);
+    }
+    toReplace.forEach(textNode => {
+      const frag = document.createDocumentFragment();
+      textNode.textContent.split(/(\[\d+\])/).forEach(part => {
+        const m = part.match(/^\[(\d+)\]$/);
+        if (m) {
+          const citation = citationMap[parseInt(m[1])];
+          const btn = document.createElement('button');
+          btn.className = 'citation-ref';
+          btn.textContent = part;
+          if (citation?.doc_slug) {
+            btn.addEventListener('click', () => openDocInModal(citation.source_system, citation.doc_slug));
+          }
+          frag.appendChild(btn);
+        } else {
+          frag.appendChild(document.createTextNode(part));
+        }
+      });
+      textNode.parentNode.replaceChild(frag, textNode);
+    });
+  }
+
+  async function openDocInModal(source, slug) {
+    sourcesOverlay.style.display = 'flex';
+    sourcesOverlay.classList.remove('hiding');
+    document.getElementById('doc-view-title').textContent = '…';
+    document.getElementById('doc-view-meta').textContent  = '';
+    document.getElementById('doc-view-body').innerHTML    = '';
+    showDocView();
+    try {
+      const res  = await fetch(`/sample-doc/${source}/${slug}`);
+      const data = await res.json();
+      document.getElementById('doc-view-title').textContent = data.title;
+      const parts = [data.source_system, data.document_type, data.last_updated].filter(Boolean);
+      document.getElementById('doc-view-meta').textContent = parts.join(' · ');
+      document.getElementById('doc-view-body').innerHTML = marked.parse(data.body);
+    } catch {
+      document.getElementById('doc-view-body').innerHTML = 'Failed to load document.';
+    }
+  }
+
+  document.querySelectorAll('.sources-index-item').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const source = btn.dataset.source;
+      const slug   = btn.dataset.slug;
+      document.getElementById('doc-view-title').textContent = '…';
+      document.getElementById('doc-view-meta').textContent  = '';
+      document.getElementById('doc-view-body').textContent  = '';
+      showDocView();
+      try {
+        const res  = await fetch(`/sample-doc/${source}/${slug}`);
+        const data = await res.json();
+        document.getElementById('doc-view-title').textContent = data.title;
+        const parts = [data.source_system, data.document_type, data.last_updated].filter(Boolean);
+        document.getElementById('doc-view-meta').textContent = parts.join(' · ');
+        document.getElementById('doc-view-body').innerHTML = marked.parse(data.body);
+      } catch {
+        document.getElementById('doc-view-body').innerHTML = 'Failed to load document.';
+      }
+    });
+  });
+
   const chat  = document.getElementById('chat');
   const empty = document.getElementById('empty');
   const input = document.getElementById('query');
@@ -479,7 +970,7 @@
   function addThinking() {
     const el = document.createElement('div');
     el.className = 'thinking';
-    el.innerHTML = '<div class="thinking-dot"></div><span class="thinking-label">Searching knowledge base…</span>';
+    el.innerHTML = '<div class="thinking-dots"><div class="thinking-dot"></div><div class="thinking-dot"></div><div class="thinking-dot"></div></div><span class="thinking-label">Searching knowledge base…</span>';
     chat.appendChild(el);
     scrollBottom();
     return el;
@@ -489,13 +980,14 @@
     const wrap = document.createElement('div');
     wrap.className = 'msg-wrapper assistant';
 
-    // Answer bubble
     const bubble = document.createElement('div');
-    bubble.className = 'bubble assistant flash';
-    bubble.textContent = data.answer;
+    bubble.className = 'bubble assistant';
+    bubble.innerHTML = marked.parse(data.answer);
+    const citationMap = {};
+    (data.citations || []).forEach(c => { citationMap[c.index] = c; });
+    linkifyCitations(bubble, citationMap);
     wrap.appendChild(bubble);
 
-    // Sources
     if (data.citations && data.citations.length > 0) {
       const det = document.createElement('details');
       det.className = 'sources';
@@ -517,20 +1009,13 @@
         idx.textContent = `[${c.index}]`;
         item.appendChild(idx);
 
-        if (c.source_url) {
-          const a = document.createElement('a');
-          a.className = 'source-title';
-          a.href = c.source_url;
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-          a.textContent = c.document_title || 'Untitled';
-          item.appendChild(a);
-        } else {
-          const t = document.createElement('div');
-          t.className = 'source-title';
-          t.textContent = c.document_title || 'Untitled';
-          item.appendChild(t);
+        const titleEl = document.createElement(c.doc_slug ? 'button' : 'div');
+        titleEl.className = 'source-title';
+        titleEl.textContent = c.document_title || 'Untitled';
+        if (c.doc_slug) {
+          titleEl.addEventListener('click', () => openDocInModal(c.source_system, c.doc_slug));
         }
+        item.appendChild(titleEl);
 
         const parts = [];
         if (c.source_system)  parts.push(c.source_system);
@@ -550,7 +1035,6 @@
       wrap.appendChild(det);
     }
 
-    // Disclaimer
     if (data.disclaimer) {
       const d = document.createElement('div');
       d.className = 'disclaimer';
@@ -558,7 +1042,6 @@
       wrap.appendChild(d);
     }
 
-    // Ticket draft
     if (data.ticket_draft) {
       const det = document.createElement('details');
       det.className = 'ticket-draft';
@@ -625,7 +1108,7 @@
         const b = document.createElement('div');
         b.className = 'bubble assistant';
         b.style.borderLeftColor = 'var(--red)';
-        b.style.borderLeftWidth = '2px';
+        b.style.borderLeftWidth = '3px';
         b.textContent = `Error ${resp.status}: ${err}`;
         wrap.appendChild(b);
         chat.appendChild(wrap);
@@ -642,7 +1125,7 @@
       const b = document.createElement('div');
       b.className = 'bubble assistant';
       b.style.borderLeftColor = 'var(--red)';
-      b.style.borderLeftWidth = '2px';
+      b.style.borderLeftWidth = '3px';
       b.textContent = `Could not reach backend: ${err.message}`;
       wrap.appendChild(b);
       chat.appendChild(wrap);

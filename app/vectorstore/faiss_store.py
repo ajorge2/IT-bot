@@ -59,9 +59,14 @@ class FAISSStore:
                 last_updated   TEXT,
                 document_type  TEXT,
                 chunk_index    INTEGER,
-                total_chunks   INTEGER
+                total_chunks   INTEGER,
+                doc_slug       TEXT
             )
         """)
+        # migration: add doc_slug if the table existed without it
+        existing = {r[1] for r in conn.execute("PRAGMA table_info(kb_chunks)").fetchall()}
+        if "doc_slug" not in existing:
+            conn.execute("ALTER TABLE kb_chunks ADD COLUMN doc_slug TEXT")
         conn.commit()
         return conn
 
@@ -92,14 +97,15 @@ class FAISSStore:
                 meta.get("document_type"),
                 meta.get("chunk_index"),
                 meta.get("total_chunks"),
+                meta.get("doc_slug"),
             )
             for i, (text, meta) in enumerate(zip(texts, metadatas))
         ]
         self._conn.executemany(
             """INSERT OR REPLACE INTO kb_chunks
                (faiss_id, content, source_system, document_title, source_url,
-                last_updated, document_type, chunk_index, total_chunks)
-               VALUES (?,?,?,?,?,?,?,?,?)""",
+                last_updated, document_type, chunk_index, total_chunks, doc_slug)
+               VALUES (?,?,?,?,?,?,?,?,?,?)""",
             rows,
         )
         self._conn.commit()
@@ -142,7 +148,7 @@ class FAISSStore:
                 continue
             row = self._conn.execute(
                 """SELECT faiss_id, content, source_system, document_title,
-                          source_url, last_updated, document_type, chunk_index
+                          source_url, last_updated, document_type, chunk_index, doc_slug
                    FROM kb_chunks WHERE faiss_id = ?""",
                 (int(fid),),
             ).fetchone()
@@ -156,6 +162,7 @@ class FAISSStore:
                     "last_updated":   row[5],
                     "document_type":  row[6],
                     "chunk_index":    row[7],
+                    "doc_slug":       row[8],
                     "similarity":     float(dist),
                 })
         return results
@@ -176,10 +183,10 @@ class FAISSStore:
         placeholders = ",".join("?" * len(ids))
         rows = self._conn.execute(
             f"""SELECT faiss_id, content, source_system, document_title,
-                       source_url, last_updated, document_type, chunk_index
+                       source_url, last_updated, document_type, chunk_index, doc_slug
                 FROM kb_chunks WHERE faiss_id IN ({placeholders})""",
             ids,
         ).fetchall()
         cols = ["id", "content", "source_system", "document_title",
-                "source_url", "last_updated", "document_type", "chunk_index"]
+                "source_url", "last_updated", "document_type", "chunk_index", "doc_slug"]
         return [dict(zip(cols, row)) for row in rows]

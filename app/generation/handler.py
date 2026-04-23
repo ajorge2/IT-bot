@@ -71,7 +71,7 @@ def generate_answer(
             response.confidence_score,
             settings.CONFIDENCE_THRESHOLD,
         )
-        response.ticket_draft = _generate_ticket_draft(query, llm_answer, chunks)
-        log.info("confidence.ticket_draft_generated")
+        # response.ticket_draft = _generate_ticket_draft(query, llm_answer, chunks)
+        # log.info("confidence.ticket_draft_generated")
 
     return response

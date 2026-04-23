@@ -64,6 +64,7 @@ def load_sample_confluence() -> list[Document]:
                 "source_url": meta.get("source_url", ""),
                 "last_updated": meta.get("last_updated", ""),
                 "document_type": meta.get("document_type", "how-to"),
+                "doc_slug": txt_file.stem,
             },
         ))
     log.info("Sample Confluence: loaded %d documents", len(docs))
@@ -83,6 +84,7 @@ def load_sample_sharepoint() -> list[Document]:
                 "source_url": meta.get("source_url", ""),
                 "last_updated": meta.get("last_updated", ""),
                 "document_type": meta.get("document_type", "policy"),
+                "doc_slug": txt_file.stem,
             },
         ))
     log.info("Sample SharePoint: loaded %d documents", len(docs))

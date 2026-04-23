@@ -21,7 +21,6 @@ def call_llm(messages: list[dict[str, str]]) -> str:
     with client.messages.stream(
         model=settings.ANTHROPIC_MODEL,
         max_tokens=1024,
-        temperature=0.0,
         system=[
             {
                 "type": "text",

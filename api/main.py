@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime, timezone
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Header, Depends, Request
 from fastapi.staticfiles import StaticFiles
@@ -51,6 +52,7 @@ class CitationOut(BaseModel):
     source_system: str
     document_type: str
     last_updated: str
+    doc_slug: str
 
 
 class ChatResponse(BaseModel):
@@ -121,6 +123,7 @@ def chat(req: ChatRequest, request: Request) -> ChatResponse:
                 source_system=c.source_system,
                 document_type=c.document_type,
                 last_updated=c.last_updated,
+                doc_slug=c.doc_slug,
             )
             for c in response.citations
         ],
@@ -130,6 +133,34 @@ def chat(req: ChatRequest, request: Request) -> ChatResponse:
         ticket_draft=response.ticket_draft,
         timestamp=datetime.now(timezone.utc).isoformat(),
     )
+
+
+_SAMPLE_DIR = Path("data/sample")
+_VALID_SOURCES = {"confluence", "sharepoint"}
+
+
+@app.get("/sample-doc/{source}/{slug}")
+def sample_doc(source: str, slug: str) -> dict:
+    if source not in _VALID_SOURCES:
+        raise HTTPException(status_code=404, detail="Not found")
+    path = (_SAMPLE_DIR / source / slug).with_suffix(".txt")
+    if not path.exists() or not path.is_file():
+        raise HTTPException(status_code=404, detail="Not found")
+    text = path.read_text(encoding="utf-8")
+    meta: dict = {}
+    lines = text.splitlines()
+    body_start = 0
+    for i, line in enumerate(lines):
+        if line.startswith("---"):
+            body_start = i + 1
+            break
+        if ": " in line:
+            key, _, value = line.partition(": ")
+            meta[key.strip().lower().replace(" ", "_")] = value.strip()
+    body = "\n".join(lines[body_start:]).strip()
+    return {"title": meta.get("title", slug), "body": body,
+            "source_system": source, "document_type": meta.get("document_type", ""),
+            "last_updated": meta.get("last_updated", "")}
 
 
 @app.post("/ingest", response_model=IngestResponse, dependencies=[Depends(require_admin)])

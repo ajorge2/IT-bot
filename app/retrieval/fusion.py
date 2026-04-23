@@ -38,9 +38,9 @@ def reciprocal_rank_fusion(
         scores[doc_id] += 1.0 / (settings.RRF_K + rank)
         sparse_rank[doc_id] = rank
 
-    # Build a unified id → metadata map
+    # Build a unified id → metadata map; dense takes priority (has full metadata)
     meta_map: dict[int, dict] = {}
-    for item in dense_results + sparse_results:
+    for item in sparse_results + dense_results:
         meta_map[item["id"]] = item
 
     # Sort by RRF score

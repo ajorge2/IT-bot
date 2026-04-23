@@ -7,8 +7,7 @@ import pickle
 from pathlib import Path
 from langchain_core.documents import Document
 from rank_bm25 import BM25Okapi
-
-import voyageai
+from openai import OpenAI
 
 from app.config import settings
 from app.audit import log as audit_log
@@ -17,6 +16,8 @@ from app.ingestion.chunker import chunk_documents
 from app.vectorstore.faiss_store import FAISSStore
 
 log = logging.getLogger(__name__)
+
+openai_client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 
 def run_ingestion(clear_first: bool = False) -> dict[str, int]:
@@ -29,7 +30,6 @@ def run_ingestion(clear_first: bool = False) -> dict[str, int]:
     chunks: list[Document] = chunk_documents(docs)
 
     # 3. Embed + store
-    voyage = voyageai.Client(api_key=settings.VOYAGE_API_KEY)
     store = FAISSStore()
 
     if clear_first:
@@ -39,7 +39,8 @@ def run_ingestion(clear_first: bool = False) -> dict[str, int]:
     texts = [c.page_content for c in chunks]
     metadatas = [c.metadata for c in chunks]
 
-    vectors = voyage.embed(texts, model=settings.VOYAGE_MODEL, input_type="document").embeddings
+    response = openai_client.embeddings.create(input=texts, model=settings.OPENAI_EMBEDDING_MODEL)
+    vectors = [item.embedding for item in response.data]
     store.upsert(texts=texts, embeddings=vectors, metadatas=metadatas)
 
     # 4. Build and persist BM25 index

@@ -17,6 +17,7 @@ class Citation:
     source_system: str
     document_type: str
     last_updated: str
+    doc_slug: str = ""
 
 
 @dataclass
@@ -64,7 +65,6 @@ def _compute_confidence(cited_indices: set[int], chunks: list[dict]) -> float:
     similarities = [c["similarity"] for c in cited_chunks if "similarity" in c]
     if similarities:
         return sum(similarities) / len(similarities)
-
     all_similarities = [c["similarity"] for c in chunks if "similarity" in c]
     return sum(all_similarities) / len(all_similarities) if all_similarities else 0.0
 
@@ -81,11 +81,6 @@ def build_response(
     """
     cited_indices = _parse_cited_indices(llm_answer)
 
-    # Fall back to citing all chunks if the LLM cited nothing (shouldn't happen
-    # given the system prompt, but guards against a malformed response)
-    if not cited_indices:
-        cited_indices = set(range(1, len(chunks) + 1))
-
     citations = [
         Citation(
             index=i,
@@ -94,6 +89,7 @@ def build_response(
             source_system=chunks[i - 1].get("source_system", ""),
             document_type=chunks[i - 1].get("document_type", ""),
             last_updated=chunks[i - 1].get("last_updated", ""),
+            doc_slug=chunks[i - 1].get("doc_slug", ""),
         )
         for i in sorted(cited_indices)
         if 1 <= i <= len(chunks)

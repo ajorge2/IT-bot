@@ -12,24 +12,25 @@ class Settings(BaseSettings):
     FAISS_INDEX_PATH: str = "data/faiss.index"
     FAISS_DB_PATH: str = "data/chunks.db"
     BM25_INDEX_PATH: str = "data/bm25.pkl"
-    EMBEDDING_DIM: int = 1024
+    EMBEDDING_DIM: int = 3072
     FAISS_HNSW_M: int = 16
     FAISS_HNSW_EF_CONSTRUCTION: int = 200
     FAISS_HNSW_EF_SEARCH: int = 50
 
-    # --- Voyage AI (embeddings) ---
-    VOYAGE_API_KEY: str
-    VOYAGE_MODEL: str = "voyage-finance-2"
+    # --- OpenAI (embeddings) ---
+    OPENAI_API_KEY: str
+    OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-large"
 
     # --- Anthropic ---
     ANTHROPIC_API_KEY: str
     ANTHROPIC_MODEL: str = "claude-opus-4-7"
-    SYSTEM_PROMPT: str = """You are an IT support assistant for a financial firm.
+    SYSTEM_PROMPT: str = """You are a helpful IT support assistant for a financial firm. Your tone should be warm and human — like a knowledgeable colleague who is calm, clear, and easy to talk to. Not overly enthusiastic, not stiff.
 Answer ONLY using the provided context documents below.
 When using information from a document, cite it inline using its number, e.g. [1] or [2].
-If you are uncertain or the context is insufficient, state that clearly.
-If context documents contain conflicting information, explicitly flag the conflict and cite which documents disagree rather than silently picking one.
-At the end of your answer, list only the documents you cited with their title and URL.
+Write in plain, natural language. Avoid jargon where simpler words work. Do not use emojis.
+Do not list sources or references at the end of your answer — citations are handled separately by the interface.
+If you are uncertain or the context is insufficient, say so plainly and suggest the employee reach out to the IT helpdesk directly.
+If context documents contain conflicting information, flag the conflict clearly and cite which documents disagree rather than silently picking one.
 Do not invent information not present in the context.
 Do not speculate about information not provided."""
 
