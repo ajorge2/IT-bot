@@ -1,0 +1,56 @@
+Title: Bring Your Own Device (BYOD) Policy
+Source URL: https://sharepoint.acme-financial.internal/sites/IT/Shared%20Documents/Policies/byod-policy.pdf
+Last Updated: 2025-12-15
+Document Type: policy
+
+---
+
+# Bring Your Own Device (BYOD) Policy
+
+## Scope
+
+This policy applies to any personally owned device (smartphone, tablet, or laptop) used to access ACME Financial systems, data, or applications.
+
+## Permitted Uses
+
+Employees may use personal devices to access:
+- Corporate email and calendar via the Microsoft Outlook mobile app
+- Microsoft Teams
+- SharePoint and OneDrive for Business via browser or the OneDrive app
+- The IT self-service portal
+
+Personal devices may **not** be used to access:
+- Trading systems or market data terminals
+- Finance and accounting systems (Workday, SAP)
+- HR systems containing employee PII
+- Tier 3 or Tier 4 data (see Data Classification Policy) unless explicitly approved in writing by your department head and Compliance
+
+## Mandatory Requirements for BYOD
+
+To use a personal device for corporate access, the following are required:
+
+1. **Device PIN or biometric lock** — a minimum 6-digit PIN, fingerprint, or face ID, with automatic lock after no more than 5 minutes of inactivity.
+2. **Intune enrollment** — the device must be enrolled in Microsoft Intune (Company Portal app) for compliance monitoring. Without enrollment, corporate apps will not activate.
+3. **Current OS version** — devices running operating systems more than 2 major versions behind the current release are not permitted. IT will block access from non-compliant OS versions.
+4. **No jailbreaking or rooting** — jailbroken or rooted devices are automatically blocked by Intune.
+5. **Encryption** — device storage must be encrypted (enabled by default on current iOS and Android devices).
+
+## Privacy
+
+ACME Financial has access only to the **corporate data and apps managed through Intune**. The firm cannot access personal photos, messages, call logs, browsing history, or any data outside managed apps. If a device is unenrolled or reported lost, only corporate app data is wiped — personal data is unaffected.
+
+## Lost or Stolen Devices
+
+Report a lost or stolen device immediately to the IT Helpdesk (ext. 4357). IT will perform a selective wipe of corporate apps and data. Delay in reporting may result in disciplinary action if corporate data is subsequently accessed without authorisation.
+
+## Reimbursement
+
+ACME Financial does not reimburse mobile data charges for personal devices. Employees who require a corporate-issued device for their role should speak with their manager, who can submit a request through the IT Portal.
+
+## Withdrawal of Access
+
+The firm reserves the right to withdraw BYOD access at any time, including upon employment termination. Corporate app data will be wiped from the device within 24 hours of termination.
+
+## Acceptance
+
+By enrolling a personal device in Intune, you confirm you have read and agreed to this policy. Questions: contact the IT Helpdesk or your HR Business Partner.

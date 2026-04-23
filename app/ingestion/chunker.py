@@ -1,19 +1,14 @@
 """
-Chunking — RecursiveCharacterTextSplitter at ~512 tokens with 50-token overlap.
-Uses tiktoken for accurate token counting.
+Chunking — RecursiveCharacterTextSplitter with tiktoken for accurate token counting.
 """
-from __future__ import annotations
 
 import logging
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-log = logging.getLogger(__name__)
+from app.config import settings
 
-# ~512 tokens ≈ ~2048 chars at ~4 chars/token (conservative estimate).
-# tiktoken encoding is used for accurate measurement.
-CHUNK_TOKENS = 512
-OVERLAP_TOKENS = 50
+log = logging.getLogger(__name__)
 
 
 def chunk_documents(docs: list[Document]) -> list[Document]:
@@ -23,8 +18,8 @@ def chunk_documents(docs: list[Document]) -> list[Document]:
     """
     splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
         encoding_name="cl100k_base",
-        chunk_size=CHUNK_TOKENS,
-        chunk_overlap=OVERLAP_TOKENS,
+        chunk_size=settings.CHUNK_TOKENS,
+        chunk_overlap=settings.CHUNK_OVERLAP_TOKENS,
         separators=["\n\n", "\n", ". ", " ", ""],
     )
 

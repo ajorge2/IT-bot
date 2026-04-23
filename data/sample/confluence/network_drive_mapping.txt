@@ -1,0 +1,60 @@
+Title: Mapping Network Drives and Accessing File Shares
+Source URL: https://wiki.acme-financial.internal/display/IT/network-drive-mapping
+Last Updated: 2026-01-18
+Document Type: how-to
+
+---
+
+# Mapping Network Drives and Accessing File Shares
+
+ACME Financial's shared file storage is hosted on a Windows File Server at **\\fileserver.acme-financial.internal**. You must be on the corporate network or connected to the VPN to access it.
+
+## Common Share Paths
+
+| Drive Letter | Share Path | Contents |
+|---|---|---|
+| H: | \\fileserver.acme-financial.internal\home\username | Your personal home drive |
+| S: | \\fileserver.acme-financial.internal\shared | Department-wide shared files |
+| T: | \\fileserver.acme-financial.internal\teams | Team-specific folders (access by request) |
+| P: | \\fileserver.acme-financial.internal\projects | Project folders (access by request) |
+
+Replace "username" with your AD username (e.g., john.smith).
+
+## Mapping a Drive on Windows
+
+1. Open File Explorer and right-click "This PC" → "Map network drive".
+2. Choose a drive letter (use the standard letters above where possible).
+3. In the Folder field, enter the share path (e.g., \\fileserver.acme-financial.internal\shared).
+4. Check "Reconnect at sign-in" so the mapping persists after restart.
+5. Check "Connect using different credentials" only if prompted — your corporate login should work automatically.
+6. Click Finish. The drive appears in the left panel of File Explorer.
+
+**Tip:** You can also browse all shares by typing \\fileserver.acme-financial.internal directly into the File Explorer address bar.
+
+## Mapping a Drive on macOS
+
+1. In Finder, click Go → Connect to Server (or press ⌘K).
+2. Enter: smb://fileserver.acme-financial.internal/shared (replace "shared" with the desired share name).
+3. Click Connect. Enter your corporate credentials when prompted.
+4. The share mounts on your Desktop and in the Finder sidebar.
+
+To reconnect automatically at login: System Preferences → Users & Groups → Login Items → add the mounted drive.
+
+## Requesting Access to Additional Shares
+
+Access to team and project folders must be approved by the folder owner (usually a department head or project lead). To request access:
+
+1. Submit a request via the IT Portal at https://itportal.acme-financial.internal.
+2. Select "File Share Access Request" and specify the share path and justification.
+3. The folder owner receives an approval email. IT grants access once approved.
+4. Allow 1 business day for provisioning after approval.
+
+## Troubleshooting
+
+**"Windows cannot access \\fileserver..." error:** Verify you are on the corporate network or VPN. Ping fileserver.acme-financial.internal from a command prompt to test connectivity.
+
+**Drive letter missing after restart:** The drive is mapped but requires VPN to reconnect. Connect to GlobalProtect first, then open File Explorer — the drive reconnects automatically.
+
+**"Access denied" on a folder you previously had access to:** Permissions may have been audited and tightened. Submit a new access request via the IT Portal.
+
+**macOS: share mounts but shows as read-only:** Your account may only have read permissions. Contact the folder owner or helpdesk to confirm your permission level.

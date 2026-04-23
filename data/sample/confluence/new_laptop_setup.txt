@@ -1,0 +1,61 @@
+Title: New Laptop Setup — IT Onboarding Checklist
+Source URL: https://wiki.acme-financial.internal/display/IT/new-laptop-setup
+Last Updated: 2026-03-01
+Document Type: how-to
+
+---
+
+# New Laptop Setup — IT Onboarding Checklist
+
+This guide covers everything you need to do to get a new ACME Financial laptop fully configured. Complete these steps in order.
+
+## Step 1 — Connect to the Office Network
+
+Plug in to ethernet at your desk or connect to the Wi-Fi network **ACME-Corp** (not ACME-Guest). You must be on the corporate network for the initial setup — Wi-Fi credentials are provided by your manager or the IT Helpdesk.
+
+## Step 2 — Complete Windows/macOS Setup and Domain Join
+
+**Windows:** Your laptop arrives pre-joined to the ACME Financial domain. Sign in with your corporate credentials (firstname.lastname@acme-financial.com) at the Windows login screen. If the domain is not shown, contact IT — do not create a local account.
+
+**macOS:** Open System Preferences → Users & Groups. Your laptop is managed via Jamf MDM. You will be prompted to sign in with your ACME Financial Okta credentials during first boot. Complete that flow before proceeding.
+
+## Step 3 — Install Required Software via Self Service
+
+**Windows:** Open Software Center (Start → search "Software Center"). Required software for your role is pre-staged. Install everything in the "Required" tab first. This includes Microsoft 365, GlobalProtect VPN, Cylance (antivirus), and Zoom.
+
+**macOS:** Open Self Service (Jamf) from the Applications folder. Install all items marked "Required for your role". Allow 20–30 minutes for all installations to complete.
+
+## Step 4 — Register for MFA
+
+Before you can access email, SharePoint, or the VPN from outside the office, you must register for Multi-Factor Authentication.
+
+1. Go to https://aka.ms/mfasetup from any browser.
+2. Sign in with your corporate credentials.
+3. Follow the prompts to add the Microsoft Authenticator app as your primary MFA method.
+4. Add a backup phone number as a secondary method.
+
+See the MFA Setup guide for full instructions.
+
+## Step 5 — Set Up the VPN Client
+
+You will need the VPN to work remotely. Open the GlobalProtect client (installed in Step 3), enter gateway **vpn.acme-financial.com**, and sign in with your corporate credentials + MFA. See the VPN Setup guide for troubleshooting.
+
+## Step 6 — Configure Email (Outlook)
+
+Open Outlook. It will auto-discover your account using your corporate email address. Sign in when prompted. Allow 15–30 minutes for your mailbox to fully sync on first launch. Your calendar, contacts, and shared mailboxes will populate automatically.
+
+## Step 7 — Map Network Drives
+
+Shared file server drives must be mapped manually on first setup. See the Network Drive Mapping guide for instructions.
+
+## Step 8 — Enroll in MDM (macOS only)
+
+If prompted by Jamf, click "Enroll" to complete MDM enrollment. This allows IT to push security policies and software remotely. Your personal files and browsing history are not visible to IT through MDM.
+
+## Step 9 — Verify Printer Access
+
+Add your floor's printers by navigating to \\printserver.acme-financial.internal in File Explorer (Windows) or Finder → Go → Connect to Server (macOS). See the Printer Setup guide for your floor.
+
+## Getting Help
+
+If any step fails, contact the IT Helpdesk: ext. 4357, Teams "IT Helpdesk", or walk-in Floor 2 Building A. Have your employee ID and laptop serial number ready.

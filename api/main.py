@@ -7,7 +7,6 @@ Endpoints:
   GET  /health        — liveness probe
 
 Security:
-  - CORS restricted to ALLOWED_ORIGINS
   - Admin endpoints gated by X-Admin-Secret header
   - All inputs validated by Pydantic models
   - No user-controlled strings ever interpolated into SQL
@@ -18,31 +17,22 @@ import logging
 from datetime import datetime, timezone
 
 from fastapi import FastAPI, HTTPException, Header, Depends, Request
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from app.config import settings
 from app.audit import log as audit_log
 from app.retrieval.pipeline import retrieve
-from app.confidence.handler import generate_answer
+from app.generation.handler import generate_answer
 
 log = logging.getLogger(__name__)
 
 app = FastAPI(
     title="IT Knowledge Base Chatbot",
     description="Internal IT self-service chatbot for financial firm employees.",
-    version="1.0.0",
-    docs_url=None,      # Disable Swagger UI in production
-    redoc_url=None,
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.allowed_origins_list,
-    allow_credentials=False,
-    allow_methods=["POST", "GET"],
-    allow_headers=["Content-Type", "X-Admin-Secret"],
-)
+app.mount("/ui", StaticFiles(directory="frontend", html=True), name="frontend")
 
 
 # ---------------------------------------------------------------------------
@@ -66,6 +56,7 @@ class CitationOut(BaseModel):
 class ChatResponse(BaseModel):
     answer: str
     citations: list[CitationOut]
+    confidence_score: float
     low_confidence: bool
     disclaimer: str
     ticket_draft: dict | None
@@ -83,7 +74,7 @@ class IngestResponse(BaseModel):
 # ---------------------------------------------------------------------------
 
 def require_admin(x_admin_secret: str | None = Header(default=None)) -> None:
-    if x_admin_secret != settings.api_secret_key:
+    if x_admin_secret != settings.API_SECRET_KEY:
         raise HTTPException(status_code=403, detail="Forbidden")
 
 
@@ -109,13 +100,14 @@ def chat(req: ChatRequest, request: Request) -> ChatResponse:
     )
 
     chunks, top_similarity = retrieve(req.query)
-    response = generate_answer(req.query, chunks, top_similarity)
+    response = generate_answer(req.query, chunks)
 
     audit_log.info(
         "chat.response",
         user_id=req.user_id,
         low_confidence=response.low_confidence,
-        top_similarity=top_similarity,
+        pre_llm_top_similarity=top_similarity,
+        post_llm_confidence_score=response.confidence_score,
         num_citations=len(response.citations),
     )
 
@@ -132,6 +124,7 @@ def chat(req: ChatRequest, request: Request) -> ChatResponse:
             )
             for c in response.citations
         ],
+        confidence_score=response.confidence_score,
         low_confidence=response.low_confidence,
         disclaimer=response.disclaimer,
         ticket_draft=response.ticket_draft,

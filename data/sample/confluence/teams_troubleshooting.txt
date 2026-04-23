@@ -1,0 +1,67 @@
+Title: Microsoft Teams — Common Issues and Fixes
+Source URL: https://wiki.acme-financial.internal/display/IT/teams-troubleshooting
+Last Updated: 2026-03-22
+Document Type: how-to
+
+---
+
+# Microsoft Teams — Common Issues and Fixes
+
+## Teams Not Loading or Stuck on the Loading Screen
+
+1. Quit Teams completely (right-click the Teams icon in the system tray → Quit, or Force Quit on macOS).
+2. Clear the Teams cache:
+   - **Windows:** Press Win+R → type `%appdata%\Microsoft\Teams` → delete the contents of the `Cache` folder.
+   - **macOS:** Open Finder → Go → Go to Folder → `~/Library/Application Support/Microsoft/Teams` → delete the `Cache` folder.
+3. Relaunch Teams. The cache rebuilds on next sign-in (takes 30–60 seconds).
+
+## Messages Not Sending or Showing as "Pending"
+
+This usually indicates a network or authentication issue:
+1. Check your internet connection.
+2. Sign out of Teams (profile picture → Sign Out) and sign back in.
+3. If on VPN, try disconnecting and reconnecting.
+4. If the issue persists, restart Teams.
+
+## Teams Calls — No Audio or Video
+
+**Before a call:**
+- Check that the correct microphone, speaker, and camera are selected: Teams settings → Devices.
+- Test your devices using the "Make a test call" button in Teams settings.
+
+**Microphone not working:**
+- Windows: Settings → Privacy → Microphone → ensure Teams is allowed.
+- macOS: System Preferences → Security & Privacy → Privacy → Microphone → check Microsoft Teams.
+
+**Camera not working:**
+- Check that no other application (Zoom, browser) is using the camera at the same time.
+- macOS: System Preferences → Security & Privacy → Privacy → Camera → check Microsoft Teams.
+- Try unplugging and replugging a USB camera.
+
+**Echo during calls:** If others hear an echo of their own voice, your speakers are feeding back into your microphone. Use headphones or enable noise suppression: Teams settings → Devices → Noise suppression → High.
+
+## Teams Notifications Not Working
+
+- Check Teams notification settings: profile picture → Settings → Notifications.
+- Windows: Settings → System → Notifications → ensure Teams notifications are on.
+- macOS: System Preferences → Notifications → Teams → enable Allow Notifications.
+- If notifications work in the browser but not the desktop app, reinstall Teams.
+
+## "You're missing out — ask your admin to enable Microsoft Teams"
+
+Your account is licensed and enabled. This message appears when Teams is not yet provisioned for your account. Contact the helpdesk — provisioning usually completes within 1 business day of your start date.
+
+## Teams Very Slow or Using Too Much CPU/Memory
+
+Teams can be memory-intensive. Workarounds:
+1. Disable GPU hardware acceleration: Teams settings → General → uncheck "Disable GPU hardware acceleration" and restart Teams.
+2. Reduce the number of open chats/channels.
+3. Use Teams in a browser (teams.microsoft.com) as a lighter alternative.
+
+## Re-installing Teams
+
+If none of the above resolves the issue, a clean reinstall usually fixes persistent problems:
+1. Uninstall Teams via Control Panel (Windows) or drag to Trash (macOS).
+2. Delete the cache folder (paths above).
+3. Download the latest Teams installer from https://teams.microsoft.com/downloads.
+4. Install and sign in with your corporate credentials.

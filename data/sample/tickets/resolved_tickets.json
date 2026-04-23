@@ -46,5 +46,69 @@
     "resolution": "Investigation found the Cylance antivirus agent had entered a loop scanning a corrupted temp file, consuming 80%+ CPU continuously. Resolution: 1) IT remote-connected and cleared the Cylance scan queue via the management console. 2) Deleted the corrupted temp file in C:\\Windows\\Temp. 3) Restarted the Cylance service. Performance returned to normal immediately. Battery drain was a symptom of sustained CPU load — no hardware issue. Device is now healthy. If this recurs, user should call helpdesk immediately rather than waiting — sustained high CPU shortens SSD and battery lifespan.",
     "resolved_at": "2026-04-01T13:10:00Z",
     "source_url": "https://itportal.acme-financial.internal/tickets/INC0001201"
+  },
+  {
+    "id": "INC0001233",
+    "subject": "Zoom audio not working in meetings, others can't hear me",
+    "description": "In every Zoom call since yesterday, other participants cannot hear me. I can hear them fine. Microphone works in Teams and in Windows sound settings test. Zoom says microphone is active.",
+    "resolution": "Zoom had lost permission to access the microphone after a Windows privacy update reset app permissions. Fix: 1) Windows Settings → Privacy → Microphone → ensure 'Allow apps to access your microphone' is On. 2) Scroll down and confirm Zoom is toggled on in the app list. 3) Restart Zoom. Audio restored immediately. Secondary check: in Zoom settings → Audio, confirm the correct microphone is selected and the input level shows movement when speaking. If the level bar does not move, the microphone itself is the issue — test with another app.",
+    "resolved_at": "2026-04-03T10:05:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001233"
+  },
+  {
+    "id": "INC0001178",
+    "subject": "H: drive not reconnecting after restart, shows red X",
+    "description": "Every time I restart my laptop my H: drive shows a red X and I have to manually reconnect it. Very annoying when working from home.",
+    "resolution": "The drive reconnects after VPN but Windows tries to map it at login before VPN is established. Fix: 1) The user's mapped drive was set to reconnect at login without a login script delay. IT updated the Group Policy for this user's OU to add a 30-second login script delay, giving GlobalProtect time to connect first. 2) Alternatively, users can run a shortcut that maps the drive after connecting VPN — IT pushed this shortcut to the desktop. 3) Long-term solution: the fileserver is being moved behind a DFS namespace that tolerates connection delays — targeted for Q3 2026. The red X will disappear once VPN connects; this is cosmetic until the script delay takes effect.",
+    "resolved_at": "2026-03-28T15:20:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001178"
+  },
+  {
+    "id": "INC0001260",
+    "subject": "Getting certificate error on all internal websites in Chrome",
+    "description": "Since this morning, Chrome shows 'Your connection is not private' (NET::ERR_CERT_AUTHORITY_INVALID) on every internal site. Firefox works fine. External sites work fine in Chrome.",
+    "resolution": "The ACME Financial internal CA certificate was not present in Chrome's trust store on this device. Chrome uses the Windows certificate store on Windows and its own store on macOS. Resolution: 1) IT pushed the internal CA certificate via Group Policy to the Windows certificate store. On Windows, Chrome picks this up automatically. 2) User was asked to close and reopen Chrome after the GPO update (gpupdate /force was run remotely). 3) All internal sites loaded without certificate errors. Root cause: the device had missed a GPO update because it was offline during the previous certificate push cycle. If this recurs, run 'gpupdate /force' from an elevated command prompt while connected to the corporate network or VPN.",
+    "resolved_at": "2026-04-08T11:30:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001260"
+  },
+  {
+    "id": "INC0001144",
+    "subject": "Software installation blocked, says I need admin rights",
+    "description": "Trying to install Tableau Desktop which was approved in my software request last week (SR-00442). The installer says 'You do not have sufficient privileges to complete this installation.' I cannot find Tableau in Software Center.",
+    "resolution": "The software request (SR-00442) was approved but the deployment to Software Center had not yet completed — the deployment pipeline had a 48-hour backlog. IT manually pushed the Tableau Desktop installer to the user's device via SCCM and confirmed installation completed. The user was also shown how to check Software Center for future approved software before contacting the helpdesk. Turnaround for Software Center availability after approval is 1–2 business days; urgent cases can be escalated to have IT push directly.",
+    "resolved_at": "2026-03-19T14:00:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001144"
+  },
+  {
+    "id": "INC0001295",
+    "subject": "External monitor not detected after docking station firmware update",
+    "description": "IT pushed a docking station firmware update last night. This morning my two external monitors are not detected at all. Monitors work when connected directly to laptop via USB-C. Colleagues on the same floor have the same issue.",
+    "resolution": "The firmware update for the Dell WD19S docking station (v01.00.21) introduced a regression affecting multi-monitor detection on Windows 11 22H2. Resolution: 1) IT rolled back the docking station firmware to v01.00.19 on all affected devices via remote management. 2) Users were asked to disconnect and reconnect the docking station after rollback. Monitors detected immediately. Affected users: 14 on floors 4 and 5. Dell has been notified and a fixed firmware version is expected within 2 weeks. IT will retest before redeploying.",
+    "resolved_at": "2026-04-10T09:45:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001295"
+  },
+  {
+    "id": "INC0001312",
+    "subject": "OneDrive sync stopped, red X on all files, says 'Sign in to sync'",
+    "description": "OneDrive has a red X icon and shows 'Sign in to sync your files' but I am already signed in to Windows and Microsoft 365. This started after I changed my password last Friday.",
+    "resolution": "OneDrive cached the old credentials and did not automatically pick up the password change. Resolution: 1) Right-click the OneDrive cloud icon in the system tray → Settings → Account → 'Unlink this PC'. 2) OneDrive will prompt to sign in again. 3) Enter the new password and complete MFA. 4) OneDrive re-links and resumes sync from where it left off — no files are deleted. 5) Allow 5–10 minutes for sync to complete depending on the number of files. This is the same root cause as VPN credential caching after password changes. Remind users changing passwords to re-authenticate all synced apps (VPN, OneDrive, Outlook if prompted) on the same day.",
+    "resolved_at": "2026-04-14T10:00:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001312"
+  },
+  {
+    "id": "INC0001330",
+    "subject": "Laptop won't wake from sleep, have to hard reboot every time",
+    "description": "MacBook Pro 14-inch (M3). When I open the lid or press a key after sleep, the screen stays black. Have to hold the power button to restart. Losing work because of it. Happens multiple times a day.",
+    "resolution": "Investigation found a conflict between the Jamf MDM sleep policy and a third-party display manager app (BetterDisplay) the user had installed. BetterDisplay was intercepting the wake signal before the display could initialise. Resolution: 1) Uninstalled BetterDisplay. 2) Sleep/wake resumed working normally. 3) If the user needs display management features, recommended DisplayLink Manager (IT-approved) as a replacement, available in Self Service. Additionally: IT updated the Jamf policy to set Power Nap to Off for this model, which was contributing to the issue. If wake issues persist on other Macs, check for third-party display or GPU management tools first.",
+    "resolved_at": "2026-04-16T16:30:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001330"
+  },
+  {
+    "id": "INC0001350",
+    "subject": "Teams messages delayed by 5-10 minutes, notifications arriving late",
+    "description": "Since working from home this week, Teams messages are showing up 5-10 minutes after they are sent. Other people see my messages immediately but there is a delay receiving theirs. Video calls are fine.",
+    "resolution": "The user's home router was applying QoS rules that deprioritised Microsoft 365 traffic. Teams video/audio uses specific ports that were being prioritised, but the chat/notification traffic (port 443 HTTPS) was throttled. Resolution: 1) User was advised to log in to their home router and disable custom QoS rules, or add Microsoft 365 IP ranges to the high-priority queue. 2) Alternatively, user connected via GlobalProtect VPN, which tunnels all traffic through the corporate network and bypasses the home router QoS. Message delivery became instant. Long-term fix: Microsoft 365 IP and URL ranges for QoS configuration are published at https://docs.microsoft.com/en-us/microsoft-365/enterprise/urls-and-ip-address-ranges.",
+    "resolved_at": "2026-04-18T13:15:00Z",
+    "source_url": "https://itportal.acme-financial.internal/tickets/INC0001350"
   }
 ]

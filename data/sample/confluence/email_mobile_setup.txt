@@ -1,0 +1,62 @@
+Title: Setting Up Corporate Email on iOS and Android
+Source URL: https://wiki.acme-financial.internal/display/IT/email-mobile-setup
+Last Updated: 2026-02-10
+Document Type: how-to
+
+---
+
+# Setting Up Corporate Email on iOS and Android
+
+You can access your ACME Financial email, calendar, and contacts on a personal or corporate mobile device using Microsoft Outlook for Mobile. The native iOS Mail app and Android Gmail are not approved for corporate email — Outlook must be used.
+
+## Prerequisites
+
+- Your device must be enrolled in Intune (Microsoft's MDM) before email will activate. Enrollment takes approximately 5 minutes.
+- Ensure you have completed MFA registration before starting.
+
+## iOS Setup
+
+### Step 1 — Enroll in Intune
+1. Download the **Microsoft Intune Company Portal** app from the App Store.
+2. Open it and sign in with your corporate email (firstname.lastname@acme-financial.com).
+3. Follow the on-screen enrollment steps. You will be asked to install a management profile — tap Allow.
+4. Return to the Company Portal and tap "Check Access" until your device shows as compliant (usually under 2 minutes).
+
+### Step 2 — Set Up Outlook
+1. Download **Microsoft Outlook** from the App Store if not already installed.
+2. Open Outlook and tap "Add Account".
+3. Enter your corporate email address and tap "Add Account".
+4. Sign in with your corporate credentials and complete the MFA prompt.
+5. Outlook will configure your mailbox, calendar, and contacts automatically.
+
+## Android Setup
+
+### Step 1 — Enroll in Intune
+1. Download the **Microsoft Intune Company Portal** app from the Play Store.
+2. Open it and sign in with your corporate email.
+3. Tap "Enroll Device" and follow the prompts. Accept the device management profile when prompted.
+4. Wait for the compliance check to complete (green checkmark in Company Portal).
+
+### Step 2 — Set Up Outlook
+1. Download **Microsoft Outlook** from the Play Store.
+2. Open Outlook → Add Account → enter your corporate email.
+3. Sign in and complete MFA.
+4. Your mailbox will sync automatically.
+
+## PIN and Encryption Requirements
+
+By policy, any device with corporate email installed must have a device PIN or biometric lock enabled with a screen timeout of no more than 5 minutes. Intune will enforce this — if your device is non-compliant, email access will be blocked until a PIN is set.
+
+## Remote Wipe
+
+If your device is lost or stolen, IT can remotely wipe **only the Outlook app and its data** — not your personal photos or apps. Report a lost device immediately to the helpdesk at ext. 4357 so this can be performed.
+
+## Troubleshooting
+
+**"Your device is not compliant" message:** Open the Intune Company Portal and tap "Check Access". If the issue persists, re-enroll the device.
+
+**MFA prompt loops repeatedly:** Your Authenticator session has expired. Re-authenticate in the Authenticator app, then retry Outlook sign-in.
+
+**Emails not syncing:** Check your mobile data or Wi-Fi connection. In Outlook settings, verify the sync period is not set to "None".
+
+**Outlook app crashes on launch:** Force-close the app, clear the cache (Android: Settings → Apps → Outlook → Clear Cache), and relaunch. If the issue continues, uninstall and reinstall Outlook.

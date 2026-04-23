@@ -4,8 +4,6 @@ Re-scores the RRF-fused candidates before passing the final top-N to the LLM.
 
 This is the biggest single accuracy lever in the pipeline.
 """
-from __future__ import annotations
-
 import logging
 from functools import lru_cache
 
@@ -18,8 +16,8 @@ log = logging.getLogger(__name__)
 
 @lru_cache(maxsize=1)
 def _get_cross_encoder() -> CrossEncoder:
-    log.info("Loading cross-encoder: %s", settings.reranker_model)
-    return CrossEncoder(settings.reranker_model)
+    log.info("Loading cross-encoder: %s", settings.RERANKER_MODEL)
+    return CrossEncoder(settings.RERANKER_MODEL)
 
 
 def rerank(
@@ -39,7 +37,7 @@ def rerank(
         top_n candidates sorted by cross-encoder score descending,
         with 'rerank_score' added to each dict.
     """
-    n = top_n or settings.retrieval_final_top_n
+    n = top_n or settings.RETRIEVAL_FINAL_TOP_N
     if not candidates:
         return []
 

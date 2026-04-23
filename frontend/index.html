@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IT Knowledge Base</title>
+  <style>
+    :root {
+      --bg:         #090b10;
+      --surface:    #0e1018;
+      --border:     #1e2232;
+      --accent:     #1a5fff;
+      --accent-dim: #0a1f66;
+      --text:       #dde1f0;
+      --muted:      #6b7190;
+      --red:        #dc2626;
+      --sans:       -apple-system, 'Inter', sans-serif;
+      --mono:       'Courier New', Menlo, monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; overflow: hidden; }
+
+    body {
+      font-family: var(--sans);
+      font-size: 13px;
+      line-height: 1.5;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Film grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.055;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ── Header ──────────────────────────────────────────────────────── */
+    header {
+      flex-shrink: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    header h1 {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    header p {
+      font-family: var(--sans);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ── Chat area ───────────────────────────────────────────────────── */
+    #chat-outer {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+    }
+    #chat {
+      width: 100%;
+      max-width: 840px;
+      height: 100%;
+      overflow-y: auto;
+      padding: 20px 20px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* ── Empty state ─────────────────────────────────────────────────── */
+    #empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-align: center;
+      pointer-events: none;
+    }
+    #empty p {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    #empty span {
+      font-family: var(--sans);
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.5;
+    }
+
+    /* ── Message wrappers ────────────────────────────────────────────── */
+    .msg-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .msg-wrapper.user      { align-items: flex-end; }
+    .msg-wrapper.assistant { align-items: flex-start; }
+
+    /* ── Bubbles ─────────────────────────────────────────────────────── */
+    .bubble {
+      max-width: 80%;
+      padding: 12px 14px;
+      border-radius: 5px;
+      font-family: var(--sans);
+      font-size: 13px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .bubble.user {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--text);
+    }
+    .bubble.assistant {
+      background: var(--surface);
+      color: var(--text);
+    }
+    .bubble.assistant:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    @keyframes flash-in {
+      from { background: rgba(220,38,38,0.25); }
+      to   { background: var(--surface); }
+    }
+    .bubble.flash { animation: flash-in 1.2s ease-out forwards; }
+
+    /* ── Sources panel ───────────────────────────────────────────────── */
+    details.sources {
+      max-width: 80%;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--surface);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+    details.sources > summary {
+      list-style: none;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      border-bottom: 1px solid transparent;
+      user-select: none;
+      transition: color 0.15s;
+    }
+    details.sources > summary:hover { color: var(--text); }
+    details.sources[open] > summary { border-bottom-color: var(--border); }
+    details.sources > summary .chevron {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--accent);
+      transition: transform 0.15s;
+      display: inline-block;
+    }
+    details.sources[open] > summary .chevron { transform: rotate(90deg); }
+    .source-count {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 1px 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .sources-list {
+      padding: 10px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .source-item {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--bg);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .source-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .source-index {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .source-title {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+      margin-top: 2px;
+    }
+    a.source-title:hover { color: var(--accent); }
+    .source-meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── Disclaimer ──────────────────────────────────────────────────── */
+    .disclaimer {
+      max-width: 80%;
+      font-family: var(--sans);
+      font-size: 13px;
+      line-height: 1.5;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--accent);
+      border-radius: 5px;
+      padding: 10px 14px;
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+
+    /* ── Ticket draft ────────────────────────────────────────────────── */
+    details.ticket-draft {
+      max-width: 80%;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--red);
+      border-radius: 5px;
+      background: var(--surface);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+    details.ticket-draft > summary {
+      list-style: none;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--red);
+      border-bottom: 1px solid transparent;
+      user-select: none;
+      transition: color 0.15s;
+    }
+    details.ticket-draft[open] > summary { border-bottom-color: var(--border); }
+    details.ticket-draft > summary .chevron {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--red);
+      transition: transform 0.15s;
+      display: inline-block;
+    }
+    details.ticket-draft[open] > summary .chevron { transform: rotate(90deg); }
+    .ticket-body {
+      padding: 12px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .ticket-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .ticket-subject-text {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      margin-top: 2px;
+    }
+    .ticket-body textarea {
+      width: 100%;
+      resize: vertical;
+      min-height: 110px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text);
+      outline: none;
+      line-height: 1.5;
+    }
+    .ticket-note {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    /* ── Thinking indicator ──────────────────────────────────────────── */
+    .thinking {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+    }
+    .thinking-dot {
+      width: 5px;
+      height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 1.2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+    .thinking-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ── Input bar ───────────────────────────────────────────────────── */
+    #input-bar-outer {
+      flex-shrink: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+    }
+    #input-bar {
+      width: 100%;
+      max-width: 840px;
+      padding: 12px 20px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    #query {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 10px 12px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      resize: none;
+      outline: none;
+      line-height: 1.5;
+      max-height: 160px;
+      overflow-y: auto;
+      transition: border-color 0.15s;
+    }
+    #query::placeholder { color: var(--muted); opacity: 0.6; }
+    #query:focus { border-color: var(--accent); }
+
+    /* Primary button */
+    #send {
+      flex-shrink: 0;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0 18px;
+      height: 40px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #send:hover:not(:disabled) { background: #1450e0; }
+    #send:disabled { background: var(--border); color: var(--muted); cursor: default; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>IT Knowledge Base</h1>
+  <p>Ask any IT question — password resets, VPN, software access, policies, and more.</p>
+</header>
+
+<div id="chat-outer">
+  <div id="chat">
+    <div id="empty">
+      <p>No questions yet.</p>
+      <span>Type a question below to search the knowledge base.</span>
+    </div>
+  </div>
+</div>
+
+<div id="input-bar-outer">
+  <div id="input-bar">
+    <textarea id="query" rows="1" placeholder="Ask an IT question…"></textarea>
+    <button id="send">Send</button>
+  </div>
+</div>
+
+<script>
+  const chat  = document.getElementById('chat');
+  const empty = document.getElementById('empty');
+  const input = document.getElementById('query');
+  const btn   = document.getElementById('send');
+
+  let userId = sessionStorage.getItem('itbot_uid');
+  if (!userId) {
+    userId = crypto.randomUUID();
+    sessionStorage.setItem('itbot_uid', userId);
+  }
+
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = input.scrollHeight + 'px';
+  });
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit(); }
+  });
+
+  btn.addEventListener('click', submit);
+
+  function clearEmpty() {
+    if (empty && empty.parentNode) empty.remove();
+  }
+
+  function scrollBottom() {
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function addUserBubble(text) {
+    clearEmpty();
+    const wrap = document.createElement('div');
+    wrap.className = 'msg-wrapper user';
+    const b = document.createElement('div');
+    b.className = 'bubble user';
+    b.textContent = text;
+    wrap.appendChild(b);
+    chat.appendChild(wrap);
+    scrollBottom();
+  }
+
+  function addThinking() {
+    const el = document.createElement('div');
+    el.className = 'thinking';
+    el.innerHTML = '<div class="thinking-dot"></div><span class="thinking-label">Searching knowledge base…</span>';
+    chat.appendChild(el);
+    scrollBottom();
+    return el;
+  }
+
+  function buildAssistantMessage(data) {
+    const wrap = document.createElement('div');
+    wrap.className = 'msg-wrapper assistant';
+
+    // Answer bubble
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble assistant flash';
+    bubble.textContent = data.answer;
+    wrap.appendChild(bubble);
+
+    // Sources
+    if (data.citations && data.citations.length > 0) {
+      const det = document.createElement('details');
+      det.className = 'sources';
+      det.open = true;
+
+      const sum = document.createElement('summary');
+      sum.innerHTML = `<span class="chevron">▶</span> Sources <span class="source-count">${data.citations.length}</span>`;
+      det.appendChild(sum);
+
+      const list = document.createElement('div');
+      list.className = 'sources-list';
+
+      data.citations.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'source-item';
+
+        const idx = document.createElement('div');
+        idx.className = 'source-index';
+        idx.textContent = `[${c.index}]`;
+        item.appendChild(idx);
+
+        if (c.source_url) {
+          const a = document.createElement('a');
+          a.className = 'source-title';
+          a.href = c.source_url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.textContent = c.document_title || 'Untitled';
+          item.appendChild(a);
+        } else {
+          const t = document.createElement('div');
+          t.className = 'source-title';
+          t.textContent = c.document_title || 'Untitled';
+          item.appendChild(t);
+        }
+
+        const parts = [];
+        if (c.source_system)  parts.push(c.source_system);
+        if (c.document_type)  parts.push(c.document_type);
+        if (c.last_updated)   parts.push(c.last_updated);
+        if (parts.length) {
+          const meta = document.createElement('div');
+          meta.className = 'source-meta';
+          meta.textContent = parts.join(' · ');
+          item.appendChild(meta);
+        }
+
+        list.appendChild(item);
+      });
+
+      det.appendChild(list);
+      wrap.appendChild(det);
+    }
+
+    // Disclaimer
+    if (data.disclaimer) {
+      const d = document.createElement('div');
+      d.className = 'disclaimer';
+      d.textContent = data.disclaimer;
+      wrap.appendChild(d);
+    }
+
+    // Ticket draft
+    if (data.ticket_draft) {
+      const det = document.createElement('details');
+      det.className = 'ticket-draft';
+
+      const sum = document.createElement('summary');
+      sum.innerHTML = '<span class="chevron">▶</span> Low confidence — review ticket draft before submitting';
+      det.appendChild(sum);
+
+      const body = document.createElement('div');
+      body.className = 'ticket-body';
+
+      const lbl = document.createElement('div');
+      lbl.className = 'ticket-label';
+      lbl.textContent = 'Subject';
+      body.appendChild(lbl);
+
+      const subj = document.createElement('div');
+      subj.className = 'ticket-subject-text';
+      subj.textContent = data.ticket_draft.subject || '';
+      body.appendChild(subj);
+
+      const ta = document.createElement('textarea');
+      ta.value = data.ticket_draft.description || '';
+      ta.readOnly = true;
+      body.appendChild(ta);
+
+      const note = document.createElement('div');
+      note.className = 'ticket-note';
+      note.textContent = 'Copy into your ticketing system — bot does not auto-submit';
+      body.appendChild(note);
+
+      det.appendChild(body);
+      wrap.appendChild(det);
+    }
+
+    chat.appendChild(wrap);
+    scrollBottom();
+  }
+
+  async function submit() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    input.style.height = 'auto';
+    btn.disabled = true;
+
+    addUserBubble(text);
+    const thinking = addThinking();
+
+    try {
+      const resp = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: text, user_id: userId }),
+      });
+
+      thinking.remove();
+
+      if (!resp.ok) {
+        const err = await resp.text();
+        const wrap = document.createElement('div');
+        wrap.className = 'msg-wrapper assistant';
+        const b = document.createElement('div');
+        b.className = 'bubble assistant';
+        b.style.borderLeftColor = 'var(--red)';
+        b.style.borderLeftWidth = '2px';
+        b.textContent = `Error ${resp.status}: ${err}`;
+        wrap.appendChild(b);
+        chat.appendChild(wrap);
+        scrollBottom();
+        return;
+      }
+
+      buildAssistantMessage(await resp.json());
+
+    } catch (err) {
+      thinking.remove();
+      const wrap = document.createElement('div');
+      wrap.className = 'msg-wrapper assistant';
+      const b = document.createElement('div');
+      b.className = 'bubble assistant';
+      b.style.borderLeftColor = 'var(--red)';
+      b.style.borderLeftWidth = '2px';
+      b.textContent = `Could not reach backend: ${err.message}`;
+      wrap.appendChild(b);
+      chat.appendChild(wrap);
+      scrollBottom();
+    } finally {
+      btn.disabled = false;
+      input.focus();
+    }
+  }
+</script>
+
+</body>
+</html>

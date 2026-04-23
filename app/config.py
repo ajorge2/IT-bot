@@ -2,113 +2,55 @@
 Central configuration — all settings read from environment variables.
 Never import secrets directly; always go through this module.
 """
-from __future__ import annotations
-
-import json
-from enum import Enum
-from pydantic import Field, PostgresDsn, AnyHttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class EmbeddingProvider(str, Enum):
-    azure_openai = "azure_openai"
-    bedrock = "bedrock"
-    self_hosted = "self_hosted"
-
-
-class LLMProvider(str, Enum):
-    anthropic = "anthropic"
-    openai_compatible = "openai_compatible"   # Azure OpenAI, OpenAI, Ollama, etc.
-
-
-class TicketProvider(str, Enum):
-    servicenow = "servicenow"
-    jira = "jira"
-    freshservice = "freshservice"
-
-
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
-    )
+    model_config = SettingsConfigDict(env_file=".env")
 
-    # --- Database ---
-    database_url: PostgresDsn
+    # --- FAISS + SQLite store ---
+    FAISS_INDEX_PATH: str = "data/faiss.index"
+    FAISS_DB_PATH: str = "data/chunks.db"
+    BM25_INDEX_PATH: str = "data/bm25.pkl"
+    EMBEDDING_DIM: int = 1024
+    FAISS_HNSW_M: int = 16
+    FAISS_HNSW_EF_CONSTRUCTION: int = 200
+    FAISS_HNSW_EF_SEARCH: int = 50
 
-    # --- Embedding ---
-    embedding_provider: EmbeddingProvider = EmbeddingProvider.azure_openai
+    # --- Voyage AI (embeddings) ---
+    VOYAGE_API_KEY: str
+    VOYAGE_MODEL: str = "voyage-finance-2"
 
-    # Azure OpenAI
-    azure_openai_api_key: str = ""
-    azure_openai_endpoint: str = ""
-    azure_openai_embedding_deployment: str = "text-embedding-3-small"
-    azure_openai_api_version: str = "2024-02-01"
+    # --- Anthropic ---
+    ANTHROPIC_API_KEY: str
+    ANTHROPIC_MODEL: str = "claude-opus-4-7"
+    SYSTEM_PROMPT: str = """You are an IT support assistant for a financial firm.
+Answer ONLY using the provided context documents below.
+When using information from a document, cite it inline using its number, e.g. [1] or [2].
+If you are uncertain or the context is insufficient, state that clearly.
+If context documents contain conflicting information, explicitly flag the conflict and cite which documents disagree rather than silently picking one.
+At the end of your answer, list only the documents you cited with their title and URL.
+Do not invent information not present in the context.
+Do not speculate about information not provided."""
 
-    # AWS Bedrock
-    aws_region: str = "us-east-1"
-    aws_access_key_id: str = ""
-    aws_secret_access_key: str = ""
-
-    # Self-hosted BGE
-    bge_model_name: str = "BAAI/bge-large-en-v1.5"
-
-    # --- LLM ---
-    llm_provider: LLMProvider = LLMProvider.anthropic
-
-    # Anthropic
-    anthropic_api_key: str = ""
-    llm_deployment: str = "claude-opus-4-7"
-
-    # OpenAI-compatible (Azure OpenAI, Ollama, etc.) — only needed when llm_provider=openai_compatible
-    llm_base_url: str = ""
-    llm_api_key: str = ""
-    llm_api_version: str = ""
-
-    # --- Confluence ---
-    confluence_url: str = ""
-    confluence_username: str = ""
-    confluence_api_token: str = ""
-    confluence_space_key: str = "IT"
-
-    # --- SharePoint ---
-    sharepoint_tenant_id: str = ""
-    sharepoint_client_id: str = ""
-    sharepoint_client_secret: str = ""
-    sharepoint_site_url: str = ""
-
-    # --- Ticketing ---
-    ticket_provider: TicketProvider = TicketProvider.servicenow
-    ticket_base_url: str = ""
-    ticket_api_user: str = ""
-    ticket_api_password: str = ""
-    ticket_api_token: str = ""          # Jira alternative
+    # --- Chunking ---
+    CHUNK_TOKENS: int = 512
+    CHUNK_OVERLAP_TOKENS: int = 50
 
     # --- Retrieval ---
-    retrieval_top_k: int = 20
-    retrieval_final_top_n: int = 5
-    confidence_threshold: float = 0.6
-    ticket_max_age_days: int = 548      # ~18 months
+    RRF_K: int = 60
+    RETRIEVAL_TOP_K: int = 20
+    RETRIEVAL_FINAL_TOP_N: int = 5
+    CONFIDENCE_THRESHOLD: float = 0.6
 
     # --- Reranker ---
-    reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    RERANKER_MODEL: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
     # --- API Security ---
-    api_secret_key: str
-    allowed_origins: str = ""
-
-    @property
-    def allowed_origins_list(self) -> list[str]:
-        v = self.allowed_origins.strip()
-        if not v:
-            return []
-        if v.startswith("["):
-            return json.loads(v)
-        return [o.strip() for o in v.split(",") if o.strip()]
+    API_SECRET_KEY: str
 
     # --- Simulation mode ---
-    use_sample_data: bool = False   # set USE_SAMPLE_DATA=true to skip real connectors
+    USE_SAMPLE_DATA: bool = True
 
 
 settings = Settings()

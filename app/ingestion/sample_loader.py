@@ -5,7 +5,6 @@ list[Document] format as the real loaders, with identical metadata schema.
 """
 from __future__ import annotations
 
-import json
 import logging
 from pathlib import Path
 
@@ -90,40 +89,11 @@ def load_sample_sharepoint() -> list[Document]:
     return docs
 
 
-def load_sample_tickets() -> list[Document]:
-    tickets_file = SAMPLE_DIR / "tickets" / "resolved_tickets.json"
-    if not tickets_file.exists():
-        log.warning("Sample tickets file not found: %s", tickets_file)
-        return []
-
-    tickets = json.loads(tickets_file.read_text(encoding="utf-8"))
-    docs: list[Document] = []
-    for ticket in tickets:
-        content = (
-            f"Issue: {ticket.get('subject', '')}\n\n"
-            f"Details: {ticket.get('description', '')}\n\n"
-            f"Resolution: {ticket.get('resolution', '')}"
-        )
-        docs.append(Document(
-            page_content=content,
-            metadata={
-                "source_system": "tickets",
-                "document_title": f"Ticket {ticket.get('id', '')}",
-                "source_url": ticket.get("source_url", ""),
-                "last_updated": ticket.get("resolved_at", ""),
-                "document_type": "ticket resolution",
-            },
-        ))
-    log.info("Sample Tickets: loaded %d resolved tickets", len(docs))
-    return docs
-
-
 def load_all_sample_sources() -> list[Document]:
     docs: list[Document] = []
     for name, fn in [
         ("confluence", load_sample_confluence),
         ("sharepoint", load_sample_sharepoint),
-        ("tickets", load_sample_tickets),
     ]:
         try:
             docs.extend(fn())

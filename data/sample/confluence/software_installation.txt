@@ -1,0 +1,54 @@
+Title: Requesting and Installing Software
+Source URL: https://wiki.acme-financial.internal/display/IT/software-installation
+Last Updated: 2026-02-28
+Document Type: how-to
+
+---
+
+# Requesting and Installing Software
+
+## What You Can Install Without Approval
+
+The following software categories are pre-approved and available directly from Software Center (Windows) or Self Service/Jamf (macOS) without submitting a request:
+
+- Microsoft 365 apps (Word, Excel, PowerPoint, Outlook, Teams, OneNote, Visio Viewer)
+- Zoom
+- Adobe Acrobat Reader
+- Google Chrome, Mozilla Firefox
+- 7-Zip / The Unarchiver
+- Notepad++ (Windows)
+- Python 3.x (standard distribution — no pip installs of unapproved packages without IT approval)
+- Git
+
+Open Software Center or Self Service, find the application, and click Install. No ticket required.
+
+## How to Request New or Unlisted Software
+
+If the software you need is not in Software Center or Self Service, you must submit a request:
+
+1. Go to the IT Portal: https://itportal.acme-financial.internal
+2. Click "Software Request".
+3. Fill in the software name, version, vendor, business justification, and whether you need a licence purchased or already have one.
+4. Your manager receives an approval request by email.
+5. Once your manager approves, IT reviews the software for security compliance (typically 3–5 business days for standard software; longer for software that requires data access reviews).
+6. You receive an email when the software is available in Software Center.
+
+## Why Software Must Be Approved
+
+ACME Financial is subject to financial sector data regulations. All software installed on corporate devices must be reviewed to ensure it does not exfiltrate data, introduce vulnerabilities, or violate licensing terms. Unapproved software may be remotely uninstalled without notice.
+
+## Elevated Permissions / Local Admin Access
+
+Standard users do not have local administrator rights. If an installation requires admin rights and it is pre-approved software, contact the helpdesk — IT can elevate your session temporarily or push the installation remotely.
+
+## Licensing
+
+Do not install software using personal licence keys on corporate devices. If you need a licence for approved software, include this in your software request and the IT Procurement team will source one.
+
+## Removing Software
+
+You can remove pre-approved software yourself via Control Panel → Programs (Windows) or dragging to Trash (macOS) if you no longer need it. For software IT pushed to your device, contact the helpdesk to request removal so licences can be reclaimed.
+
+## Urgent Requests
+
+For time-sensitive software needs (e.g., a client deliverable requires a specific tool today), call the helpdesk at ext. 4357 and reference "urgent software request". IT will prioritise the security review where possible, though same-day turnaround cannot be guaranteed for new vendors.

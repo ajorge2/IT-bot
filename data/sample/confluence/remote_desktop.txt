@@ -1,0 +1,63 @@
+Title: Remote Desktop — Accessing Your Office Workstation from Home
+Source URL: https://wiki.acme-financial.internal/display/IT/remote-desktop
+Last Updated: 2026-01-30
+Document Type: how-to
+
+---
+
+# Remote Desktop — Accessing Your Office Workstation from Home
+
+If you need to access applications or files on your office desktop PC (not a laptop), you can use Remote Desktop Protocol (RDP) to connect to it remotely.
+
+## Prerequisites
+
+- Your office workstation must be **powered on and not locked by another user** for RDP to work.
+- You must be connected to the **GlobalProtect VPN** before attempting to connect — RDP is not exposed to the internet directly.
+- RDP access must be enabled on your workstation by IT. Contact the helpdesk if you have never used RDP before.
+
+## Finding Your Workstation's Computer Name
+
+1. At your office desk, right-click "This PC" → Properties.
+2. Note the "Computer name" (e.g., ACME-W10-03847).
+3. Alternatively, ask the helpdesk — they can look it up by your employee ID.
+
+## Connecting via RDP — Windows
+
+1. Connect to the GlobalProtect VPN.
+2. Press Win+R and type `mstsc` → press Enter.
+3. In the "Computer" field, enter your workstation's name followed by the domain: **ACME-W10-03847.acme-financial.internal**
+4. Click Connect. Enter your corporate credentials when prompted.
+5. The remote desktop session opens in a window. You can go full-screen with Ctrl+Alt+Break.
+
+## Connecting via RDP — macOS
+
+1. Connect to the GlobalProtect VPN.
+2. Download **Microsoft Remote Desktop** from the Mac App Store (free).
+3. Open the app → click "+" → Add PC.
+4. Enter your workstation name: **ACME-W10-03847.acme-financial.internal**
+5. Under "User account", add your corporate credentials.
+6. Double-click the PC entry to connect.
+
+## Connecting via RDP — iOS / Android
+
+Use the **Microsoft Remote Desktop** app (free on App Store and Play Store). Add your workstation name and corporate credentials as above. VPN must be connected before launching the RDP session.
+
+## Performance Tips
+
+- If the connection is slow, reduce the display resolution in RDP settings (Options → Display → Lower resolution).
+- Disable desktop background: Options → Experience → uncheck "Desktop background".
+- Use a wired ethernet connection at home rather than Wi-Fi for a more stable session.
+
+## Ending Your Session
+
+When finished, sign out of the remote session rather than simply closing the window. Closing the window leaves the session running on your office PC, which keeps it locked and prevents others from using it physically. To sign out: Start → your profile picture → Sign out.
+
+## Troubleshooting
+
+**"Cannot connect to the remote computer":** Verify VPN is connected. Confirm your workstation is powered on (call a colleague to check, or contact the helpdesk who can verify remotely). Confirm the computer name is correct.
+
+**Credentials rejected:** Use the format ACME\firstname.lastname or firstname.lastname@acme-financial.com. Do not use just your first name.
+
+**Black screen after connecting:** Your office workstation may have a screensaver or driver issue. Wait 15 seconds. If no change, disconnect, wait 30 seconds, and reconnect.
+
+**Session disconnects repeatedly:** Check your home internet stability. If on Wi-Fi, move closer to the router or use ethernet. Persistent disconnects should be reported to the helpdesk.

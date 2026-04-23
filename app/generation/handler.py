@@ -2,7 +2,7 @@
 Confidence handling — three-layer defence against hallucination:
   1. Citation requirement on every response
   2. Cross-encoder reranking
-  3. Threshold gate: if top cosine similarity < CONFIDENCE_THRESHOLD
+  3. Threshold gate: if avg similarity of cited chunks < CONFIDENCE_THRESHOLD
        → answer with best-guess + explicit disclaimer
        → auto-generate a pre-filled ticket draft for user review
 """
@@ -43,36 +43,34 @@ def _generate_ticket_draft(query: str, answer: str, chunks: list[dict]) -> dict:
 def generate_answer(
     query: str,
     chunks: list[dict],
-    top_similarity: float,
 ) -> BotResponse:
     """
     Generate the final answer, applying the confidence threshold gate.
 
+    Confidence is computed post-generation from the chunks the LLM actually
+    cited, so the disclaimer is appended to the response rather than baked
+    into the prompt.
+
     Args:
-        query:          User's question.
-        chunks:         Top-N reranked context chunks.
-        top_similarity: Best cosine similarity score from dense retrieval.
+        query:  User's question.
+        chunks: Top-N reranked context chunks.
 
     Returns:
-        BotResponse with answer, citations, disclaimer (if low confidence),
-        and ticket_draft (if low confidence).
+        BotResponse with answer, citations, confidence_score, disclaimer
+        (if low confidence), and ticket_draft (if low confidence).
     """
-    low_confidence = top_similarity < settings.confidence_threshold
-
-    if low_confidence:
-        log.warning(
-            "confidence.low query_len=%d top_similarity=%.3f threshold=%.2f",
-            len(query),
-            top_similarity,
-            settings.confidence_threshold,
-        )
-
-    messages = build_messages(query, chunks, low_confidence=low_confidence)
+    messages = build_messages(query, chunks)
     llm_answer = call_llm(messages)
 
-    response = build_response(llm_answer, chunks, low_confidence)
+    response = build_response(llm_answer, chunks)
 
-    if low_confidence:
+    if response.low_confidence:
+        log.warning(
+            "confidence.low query_len=%d post_llm_confidence_score=%.3f threshold=%.2f",
+            len(query),
+            response.confidence_score,
+            settings.CONFIDENCE_THRESHOLD,
+        )
         response.ticket_draft = _generate_ticket_draft(query, llm_answer, chunks)
         log.info("confidence.ticket_draft_generated")
 

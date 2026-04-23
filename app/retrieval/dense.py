@@ -1,17 +1,18 @@
 """
-Dense retrieval — cosine similarity via pgvector.
+Dense retrieval — cosine similarity via FAISS HNSW index.
 Returns top-K candidates with similarity scores.
 """
-from __future__ import annotations
+import voyageai
 
 from app.config import settings
-from app.embeddings.embedder import get_embedder
-from app.vectorstore.pgvector_store import VectorStore
+from app.vectorstore.faiss_store import FAISSStore
+
+voyage = voyageai.Client(api_key=settings.VOYAGE_API_KEY)
 
 
 def dense_search(
     query: str,
-    store: VectorStore,
+    store: FAISSStore,
     top_k: int | None = None,
 ) -> list[dict]:
     """
@@ -21,9 +22,8 @@ def dense_search(
         id, content, source_system, document_title, source_url,
         last_updated, document_type, chunk_index, similarity
     """
-    k = top_k or settings.retrieval_top_k
-    embedder = get_embedder()
-    query_vec = embedder.embed_query(query)
+    k = top_k or settings.RETRIEVAL_TOP_K
+    query_vec = voyage.embed([query], model=settings.VOYAGE_MODEL, input_type="query").embeddings[0]
 
     results = store.similarity_search(query_embedding=query_vec, top_k=k)
     return results

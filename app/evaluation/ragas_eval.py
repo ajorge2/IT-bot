@@ -51,8 +51,8 @@ def run_evaluation(golden_path: str | Path) -> dict[str, float]:
 
     for item in golden_set:
         q = item["question"]
-        chunks, top_sim = retrieve(q)
-        response = generate_answer(q, chunks, top_sim)
+        chunks, _ = retrieve(q)
+        response = generate_answer(q, chunks)
 
         questions.append(q)
         answers.append(response.answer)

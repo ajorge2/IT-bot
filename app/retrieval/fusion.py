@@ -6,12 +6,9 @@ where k=60 is the standard constant that dampens high-rank outliers.
 
 After fusion, the merged list is passed to the cross-encoder reranker.
 """
-from __future__ import annotations
-
 from collections import defaultdict
 
-
-RRF_K = 60
+from app.config import settings
 
 
 def reciprocal_rank_fusion(
@@ -32,22 +29,19 @@ def reciprocal_rank_fusion(
     # Dense contributions
     for rank, item in enumerate(dense_results, start=1):
         doc_id = item["id"]
-        scores[doc_id] += 1.0 / (RRF_K + rank)
+        scores[doc_id] += 1.0 / (settings.RRF_K + rank)
         dense_rank[doc_id] = rank
 
     # Sparse contributions
     for rank, item in enumerate(sparse_results, start=1):
         doc_id = item["id"]
-        scores[doc_id] += 1.0 / (RRF_K + rank)
+        scores[doc_id] += 1.0 / (settings.RRF_K + rank)
         sparse_rank[doc_id] = rank
 
-    # Build a unified id → content map (dense has full metadata; sparse may be partial)
+    # Build a unified id → metadata map
     meta_map: dict[int, dict] = {}
-    for item in dense_results:
+    for item in dense_results + sparse_results:
         meta_map[item["id"]] = item
-    for item in sparse_results:
-        if item["id"] not in meta_map:
-            meta_map[item["id"]] = item
 
     # Sort by RRF score
     sorted_ids = sorted(scores.keys(), key=lambda doc_id: scores[doc_id], reverse=True)

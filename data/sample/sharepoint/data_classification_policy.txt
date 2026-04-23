@@ -1,0 +1,60 @@
+Title: Data Classification and Handling Policy
+Source URL: https://sharepoint.acme-financial.internal/sites/IT/Shared%20Documents/Policies/data-classification-policy.pdf
+Last Updated: 2025-11-01
+Document Type: policy
+
+---
+
+# Data Classification and Handling Policy
+
+## Purpose
+
+This policy establishes how ACME Financial classifies and handles information assets. All employees who create, access, store, or transmit ACME Financial data are subject to this policy.
+
+## Classification Tiers
+
+### Tier 1 — Public
+
+Information approved for public release. Examples: marketing materials, published annual reports, job postings.
+
+Handling: No restrictions. May be shared externally without approval.
+
+### Tier 2 — Internal
+
+Information intended for internal use only. Examples: internal process documents, non-sensitive operational data, general company announcements.
+
+Handling: Do not share externally without manager approval. Store only on corporate systems (SharePoint, file server, or OneDrive for Business). Do not store on personal cloud storage (Dropbox, personal Google Drive, etc.).
+
+### Tier 3 — Confidential
+
+Sensitive business information whose disclosure could harm the firm, clients, or employees. Examples: client data, financial projections, personnel records, merger/acquisition data, trading strategies.
+
+Handling:
+- Store only on approved systems with access controls (SharePoint with restricted permissions, encrypted file shares).
+- Do not email externally unless encrypted. Use the Outlook "Encrypt" option for any external transmission.
+- Do not store on portable media (USB drives) without encryption and IT approval.
+- Do not discuss in public spaces or over unsecured channels.
+- Access on a need-to-know basis only.
+
+### Tier 4 — Restricted
+
+Highest sensitivity. Regulatory, legal, or contractual obligations require strict controls. Examples: material non-public information (MNPI), personally identifiable information (PII) under GDPR/CCPA, privileged legal communications, exam material.
+
+Handling:
+- Stored only in purpose-built restricted systems approved by Compliance and IT Security.
+- Access requires documented business justification and written approval from a department head and Compliance.
+- All access is logged and auditable.
+- No transmission via email. Use the firm's secure file transfer system (SecureShare) only.
+- Report any suspected unauthorised access immediately to Compliance and IT Security.
+
+## Labelling
+
+All documents must be labelled with their classification tier in the document header or file name where practicable. Microsoft Purview sensitivity labels are applied automatically in Microsoft 365. Manual labelling is required for files outside the Microsoft 365 ecosystem.
+
+## Violations
+
+Failure to handle data in accordance with this policy may result in disciplinary action up to and including termination, and may expose the firm and the individual to regulatory and legal liability. Report suspected violations to compliance@acme-financial.com or the anonymous ethics hotline.
+
+## Questions
+
+Contact the Information Security team at infosec@acme-financial.com or the IT Helpdesk at ext. 4357.
